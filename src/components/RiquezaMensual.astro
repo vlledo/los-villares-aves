@@ -17,29 +17,42 @@ const conteoPorMes = meses.map((m) => ({
 const max = Math.max(...conteoPorMes.map((c) => c.total), 1);
 ---
 
-<div class="rounded-lg border border-tierra-200 bg-white p-4">
-	<div class="flex items-baseline justify-between">
+<section data-riqueza class="rounded-lg border border-tierra-200 bg-white p-4">
+	<div class="flex items-baseline justify-between gap-3">
 		<h3 class="text-sm font-semibold uppercase tracking-wide text-tierra-700">
 			Riqueza mensual
 		</h3>
-		<span class="text-xs text-tierra-500">
-			especies visibles por mes
-		</span>
+		<div class="flex items-center gap-3 text-xs">
+			<span class="text-tierra-500">pulsa una barra para filtrar</span>
+			<button
+				type="button"
+				data-riqueza-reset
+				hidden
+				class="rounded-md border border-tierra-200 bg-tierra-50 px-2 py-1 font-semibold text-tierra-700 hover:bg-tierra-100"
+			>
+				Limpiar
+			</button>
+		</div>
 	</div>
 
 	<div class="mt-4 grid grid-cols-12 items-end gap-1.5" style="height: 8rem;">
 		{
 			conteoPorMes.map(({ mes, total }) => (
-				<div
-					class="group flex h-full flex-col items-center justify-end"
-					title={`${MES_LARGO[mes]}: ${total} especies`}
+				<button
+					type="button"
+					data-riqueza-mes={mes}
+					aria-pressed="false"
+					title={`${MES_LARGO[mes]}: ${total} especies — pulsa para filtrar`}
+					class="group flex h-full cursor-pointer flex-col items-center justify-end rounded p-0 transition hover:bg-olivo-50 focus:outline-none focus:ring-2 focus:ring-olivo-500"
 				>
-					<span class="text-xs font-bold text-tierra-700">{total}</span>
+					<span class="text-xs font-bold text-tierra-700 group-aria-[pressed=true]:text-olivo-800">
+						{total}
+					</span>
 					<div
-						class="mt-1 w-full rounded-t bg-olivo-400 transition-colors group-hover:bg-olivo-600"
+						class="mt-1 w-full rounded-t bg-olivo-400 transition-colors group-hover:bg-olivo-600 group-aria-[pressed=true]:bg-olivo-800"
 						style={`height: ${(total / max) * 80}%; min-height: 4px;`}
 					/>
-				</div>
+				</button>
 			))
 		}
 	</div>
@@ -47,4 +60,42 @@ const max = Math.max(...conteoPorMes.map((c) => c.total), 1);
 	<div class="mt-1 grid grid-cols-12 gap-1.5 text-center text-xs text-tierra-600">
 		{meses.map((m) => <span>{MES_INICIAL[m]}</span>)}
 	</div>
-</div>
+</section>
+
+<script>
+	const panel = document.querySelector<HTMLElement>('[data-riqueza]');
+	const tabla = document.querySelector<HTMLElement>('[data-heatmap]');
+	if (panel && tabla) {
+		const botones = panel.querySelectorAll<HTMLButtonElement>('[data-riqueza-mes]');
+		const reset = panel.querySelector<HTMLButtonElement>('[data-riqueza-reset]');
+		const filas = tabla.querySelectorAll<HTMLElement>('[data-tarjeta]');
+
+		const aplicar = (mes: string | null) => {
+			let visibles = 0;
+			filas.forEach((fila) => {
+				if (!mes) {
+					fila.hidden = false;
+					visibles++;
+					return;
+				}
+				const meses = (fila.dataset.meses ?? '').split(',').filter(Boolean);
+				const ok = meses.includes(mes);
+				fila.hidden = !ok;
+				if (ok) visibles++;
+			});
+			botones.forEach((b) =>
+				b.setAttribute('aria-pressed', b.dataset.riquezaMes === mes ? 'true' : 'false'),
+			);
+			if (reset) reset.hidden = mes === null;
+		};
+
+		botones.forEach((btn) => {
+			btn.addEventListener('click', () => {
+				const ya = btn.getAttribute('aria-pressed') === 'true';
+				aplicar(ya ? null : (btn.dataset.riquezaMes ?? null));
+			});
+		});
+
+		reset?.addEventListener('click', () => aplicar(null));
+	}
+</script>

@@ -11,8 +11,8 @@ const links = [
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
-<header class="border-b border-tierra-200 bg-tierra-50/90 backdrop-blur">
-	<div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+<header class="sticky top-0 z-50 h-16 border-b border-tierra-200 bg-tierra-50/95 backdrop-blur">
+	<div class="mx-auto flex h-full max-w-5xl items-center justify-between px-4">
 		<a href="/" class="text-lg font-bold tracking-tight text-tierra-900 no-underline hover:text-olivo-700">
 			{SITE_TITLE}
 		</a>

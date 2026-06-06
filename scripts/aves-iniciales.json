@@ -42,6 +42,33 @@
 		{ "slug": "cuervo", "nombre_comun": "Cuervo", "nombre_cientifico": "Corvus corax" },
 		{ "slug": "grajilla-occidental", "nombre_comun": "Grajilla occidental", "nombre_cientifico": "Coloeus monedula" },
 		{ "slug": "roquero-solitario", "nombre_comun": "Roquero solitario", "nombre_cientifico": "Monticola solitarius" },
-		{ "slug": "reyezuelo-listado", "nombre_comun": "Reyezuelo listado", "nombre_cientifico": "Regulus ignicapilla" }
+		{ "slug": "reyezuelo-listado", "nombre_comun": "Reyezuelo listado", "nombre_cientifico": "Regulus ignicapilla" },
+
+		{ "slug": "milano-negro", "nombre_comun": "Milano negro", "nombre_cientifico": "Milvus migrans" },
+		{ "slug": "milano-real", "nombre_comun": "Milano real", "nombre_cientifico": "Milvus milvus" },
+		{ "slug": "cernicalo-primilla", "nombre_comun": "Cernícalo primilla", "nombre_cientifico": "Falco naumanni" },
+		{ "slug": "halcon-peregrino", "nombre_comun": "Halcón peregrino", "nombre_cientifico": "Falco peregrinus" },
+		{ "slug": "gavilan-comun", "nombre_comun": "Gavilán común", "nombre_cientifico": "Accipiter nisus" },
+		{ "slug": "buho-real", "nombre_comun": "Búho real", "nombre_cientifico": "Bubo bubo" },
+		{ "slug": "carabo-comun", "nombre_comun": "Cárabo común", "nombre_cientifico": "Strix aluco" },
+		{ "slug": "chova-piquirroja", "nombre_comun": "Chova piquirroja", "nombre_cientifico": "Pyrrhocorax pyrrhocorax" },
+
+		{ "slug": "garza-real", "nombre_comun": "Garza real", "nombre_cientifico": "Ardea cinerea" },
+		{ "slug": "lavandera-cascadena", "nombre_comun": "Lavandera cascadeña", "nombre_cientifico": "Motacilla cinerea" },
+		{ "slug": "polla-de-agua", "nombre_comun": "Polla de agua", "nombre_cientifico": "Gallinula chloropus" },
+		{ "slug": "cormoran-grande", "nombre_comun": "Cormorán grande", "nombre_cientifico": "Phalacrocorax carbo" },
+
+		{ "slug": "curruca-capirotada", "nombre_comun": "Curruca capirotada", "nombre_cientifico": "Sylvia atricapilla" },
+		{ "slug": "chochin-comun", "nombre_comun": "Chochín común", "nombre_cientifico": "Troglodytes troglodytes" },
+		{ "slug": "colirrojo-tizon", "nombre_comun": "Colirrojo tizón", "nombre_cientifico": "Phoenicurus ochruros" },
+		{ "slug": "collalba-gris", "nombre_comun": "Collalba gris", "nombre_cientifico": "Oenanthe oenanthe" },
+		{ "slug": "pico-picapinos", "nombre_comun": "Pico picapinos", "nombre_cientifico": "Dendrocopos major" },
+		{ "slug": "agateador-europeo", "nombre_comun": "Agateador europeo", "nombre_cientifico": "Certhia brachydactyla" },
+
+		{ "slug": "golondrina-comun", "nombre_comun": "Golondrina común", "nombre_cientifico": "Hirundo rustica" },
+		{ "slug": "avion-roquero", "nombre_comun": "Avión roquero", "nombre_cientifico": "Ptyonoprogne rupestris" },
+
+		{ "slug": "perdiz-roja", "nombre_comun": "Perdiz roja", "nombre_cientifico": "Alectoris rufa" },
+		{ "slug": "codorniz-comun", "nombre_comun": "Codorniz común", "nombre_cientifico": "Coturnix coturnix" }
 	]
 }

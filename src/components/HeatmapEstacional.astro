@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { meses } from '../content.config';
 import { MES_INICIAL, MES_LARGO, PRESENCIA_COLOR, PRESENCIA_LABEL } from '../utils/meses';
+import { mesesPresentes } from '../utils/filtros';
 
 interface Props {
 	aves: CollectionEntry<'aves'>[];
@@ -10,18 +11,20 @@ interface Props {
 const { aves } = Astro.props;
 ---
 
-<div class="overflow-x-auto rounded-lg border border-tierra-200 bg-white">
-	<table class="min-w-full border-separate border-spacing-0 text-sm">
-		<thead class="bg-tierra-50">
+<div class="overflow-x-auto rounded-lg border border-tierra-200 bg-white md:overflow-visible">
+	<table data-heatmap class="min-w-full border-separate border-spacing-0 text-sm">
+		<thead>
 			<tr>
-				<th class="sticky left-0 z-10 bg-tierra-50 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-tierra-600">
+				<th
+					class="sticky left-0 top-16 z-30 border-b border-tierra-200 bg-tierra-50 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-tierra-600"
+				>
 					Especie
 				</th>
 				{
 					meses.map((m) => (
 						<th
 							scope="col"
-							class="w-9 px-0 py-2 text-xs font-bold text-tierra-700"
+							class="sticky top-16 z-20 w-9 border-b border-tierra-200 bg-tierra-50 px-0 py-2 text-xs font-bold text-tierra-700"
 							title={MES_LARGO[m]}
 						>
 							{MES_INICIAL[m]}
@@ -33,7 +36,11 @@ const { aves } = Astro.props;
 		<tbody>
 			{
 				aves.map((ave, i) => (
-					<tr class:list={['group', i % 2 === 0 ? 'bg-white' : 'bg-tierra-50/40']}>
+					<tr
+						data-tarjeta
+						data-meses={mesesPresentes(ave.data.estacionalidad).join(',')}
+						class:list={['group', i % 2 === 0 ? 'bg-white' : 'bg-tierra-50/40']}
+					>
 						<th
 							scope="row"
 							class:list={[
