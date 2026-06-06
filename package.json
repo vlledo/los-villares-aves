@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "fichas:generar": "node scripts/generate-fichas.ts"
+    "fichas:generar": "node scripts/generate-fichas.ts",
+    "og:generar": "node scripts/generate-og.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.2",

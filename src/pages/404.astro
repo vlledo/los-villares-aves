@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Página no encontrada" description="La página que buscas no existe.">
+	<section class="mx-auto max-w-2xl py-16 text-center">
+		<p class="text-7xl font-bold text-olivo-700">404</p>
+		<h1 class="mt-4 text-3xl font-bold tracking-tight text-tierra-900">
+			Esta ave no anida aquí
+		</h1>
+		<p class="mt-3 text-tierra-700">
+			La página que buscas no existe — o ha migrado. Prueba en el catálogo o
+			vuelve al inicio.
+		</p>
+
+		<div class="mt-8 flex flex-wrap justify-center gap-3">
+			<a
+				href="/"
+				class="rounded-md bg-olivo-700 px-5 py-2.5 font-semibold text-white no-underline hover:bg-olivo-600"
+			>
+				Volver al inicio
+			</a>
+			<a
+				href="/aves"
+				class="rounded-md border border-tierra-300 bg-white px-5 py-2.5 font-semibold text-tierra-800 no-underline hover:bg-tierra-50"
+			>
+				Ver el catálogo
+			</a>
+		</div>
+	</section>
+</Layout>
