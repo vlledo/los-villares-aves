@@ -41,9 +41,9 @@ const svg = `
     avesdelosvillares.es
   </text>
 
-  <!-- métrica -->
+  <!-- pie -->
   <text x="80" y="585" font-family="Georgia, serif" font-size="22" fill="#8fa343" letter-spacing="1.5">
-    40 ESPECIES · SIERRA DE LA PANDERA · LOS VILLARES (JAÉN)
+    SIERRA DE LA PANDERA · LOS VILLARES (JAÉN)
   </text>
 </svg>
 `;
