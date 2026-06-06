@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import CarruselDestacadas from '../components/CarruselDestacadas.astro';
+import Layout from '../layouts/Layout.astro';
+import { LOCATION } from '../consts';
+
+const aves = await getCollection('aves');
+const totalEspecies = aves.length;
+
+const ORDEN_DESTACADAS = [
+	'abejaruco-europeo',
+	'aguila-perdicera',
+	'oropendola-europea',
+	'buitre-leonado',
+	'abubilla',
+];
+
+const destacadas = aves
+	.filter((a) => a.data.destacada)
+	.sort(
+		(a, b) =>
+			ORDEN_DESTACADAS.indexOf(a.id) - ORDEN_DESTACADAS.indexOf(b.id),
+	);
+---
+
+<Layout>
+	<section class="prose prose-stone max-w-none">
+		<h1 class="text-4xl font-bold tracking-tight text-tierra-900">
+			Aves de Los Villares
+		</h1>
+		<p class="mt-4 text-lg text-tierra-700">
+			Un catálogo personal de las aves observables en
+			<strong>{LOCATION.nombre} ({LOCATION.provincia})</strong>, en el corazón de la sierra
+			sur de Jaén. Fichas con identificación, estacionalidad y dónde verlas.
+		</p>
+	</section>
+
+	{
+		destacadas.length > 0 && (
+			<section class="mt-10">
+				<div class="mb-4 flex items-baseline justify-between">
+					<h2 class="text-sm font-semibold uppercase tracking-wide text-tierra-700">
+						Destacadas
+					</h2>
+					<a
+						href="/aves"
+						class="text-sm text-olivo-700 no-underline hover:underline"
+					>
+						Ver todas →
+					</a>
+				</div>
+				<CarruselDestacadas aves={destacadas} />
+			</section>
+		)
+	}
+
+	<section class="mt-10 grid gap-6 sm:grid-cols-3">
+		<div class="rounded-lg border border-tierra-200 bg-white p-4">
+			<div class="text-3xl font-bold text-olivo-700">{totalEspecies}</div>
+			<div class="text-sm text-tierra-600">Especies catalogadas</div>
+		</div>
+		<div class="rounded-lg border border-tierra-200 bg-white p-4">
+			<div class="text-3xl font-bold text-olivo-700">~10 km</div>
+			<div class="text-sm text-tierra-600">Radio cubierto desde el pueblo</div>
+		</div>
+		<div class="rounded-lg border border-tierra-200 bg-white p-4">
+			<div class="text-3xl font-bold text-olivo-700">400–1900 m</div>
+			<div class="text-sm text-tierra-600">Rango altitudinal de la zona</div>
+		</div>
+	</section>
+
+	<section class="mt-10">
+		<a
+			href="/aves"
+			class="inline-block rounded-md bg-olivo-700 px-5 py-3 font-semibold text-white no-underline hover:bg-olivo-600"
+		>
+			Ver el catálogo →
+		</a>
+	</section>
+</Layout>

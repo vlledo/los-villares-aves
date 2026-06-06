@@ -1,0 +1,215 @@
+---
+import { Image } from 'astro:assets';
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import CalendarioEstacional from '../../components/CalendarioEstacional.astro';
+import { ABUNDANCIA_LABEL, HABITAT_LABEL, UICN_LABEL, formatoRango } from '../../utils/formato';
+
+export async function getStaticPaths() {
+	const aves = await getCollection('aves');
+	return aves.map((ave) => ({
+		params: { slug: ave.id },
+		props: ave,
+	}));
+}
+
+type Props = CollectionEntry<'aves'>;
+
+const ave = Astro.props;
+const { Content } = await render(ave);
+const d = ave.data;
+const uicn = UICN_LABEL[d.estado_uicn];
+---
+
+<Layout
+	title={d.nombre_comun}
+	description={d.descripcion_corta}
+>
+	<article class="mx-auto max-w-3xl">
+		<nav class="text-sm text-tierra-600">
+			<a href="/aves" class="no-underline hover:underline">← Catálogo</a>
+		</nav>
+
+		<header class="mt-4 border-b border-tierra-200 pb-6">
+			<h1 class="text-4xl font-bold tracking-tight text-tierra-900">
+				{d.nombre_comun}
+			</h1>
+			<p class="mt-1 text-lg italic text-tierra-600">{d.nombre_cientifico}</p>
+			{
+				d.nombre_local && (
+					<p class="mt-2 text-sm text-tierra-700">
+						Nombre local: <strong>{d.nombre_local}</strong>
+					</p>
+				)
+			}
+			<div class="mt-3 flex flex-wrap gap-2 text-xs">
+				<span class="rounded-full bg-tierra-100 px-3 py-1 text-tierra-800">
+					{d.orden} · {d.familia}
+				</span>
+				<span class="rounded-full bg-olivo-100 px-3 py-1 text-olivo-800">
+					{ABUNDANCIA_LABEL[d.abundancia]}
+				</span>
+				<span class:list={['rounded-full px-3 py-1', uicn.color]}>
+					UICN {uicn.sigla} · {uicn.texto}
+				</span>
+			</div>
+		</header>
+
+		{
+			d.foto_principal && (
+				<figure class="mt-6">
+					<Image
+						src={d.foto_principal}
+						alt={`Foto de ${d.nombre_comun}`}
+						width={1200}
+						height={800}
+						class="w-full rounded-lg object-cover shadow-sm"
+					/>
+					{d.foto_principal_credito && (
+						<figcaption class="mt-2 text-xs text-tierra-500">
+							Foto: {d.foto_principal_credito}
+						</figcaption>
+					)}
+				</figure>
+			)
+		}
+
+		<section class="mt-8 grid gap-4 sm:grid-cols-3">
+			<div class="rounded-lg border border-tierra-200 bg-white p-4">
+				<div class="text-xs uppercase tracking-wide text-tierra-500">Tamaño</div>
+				<div class="mt-1 text-lg font-semibold text-tierra-900">
+					{formatoRango(d.tamano_cm, 'cm')}
+				</div>
+			</div>
+			{
+				d.envergadura_cm && (
+					<div class="rounded-lg border border-tierra-200 bg-white p-4">
+						<div class="text-xs uppercase tracking-wide text-tierra-500">Envergadura</div>
+						<div class="mt-1 text-lg font-semibold text-tierra-900">
+							{formatoRango(d.envergadura_cm, 'cm')}
+						</div>
+					</div>
+				)
+			}
+			{
+				d.peso_g && (
+					<div class="rounded-lg border border-tierra-200 bg-white p-4">
+						<div class="text-xs uppercase tracking-wide text-tierra-500">Peso</div>
+						<div class="mt-1 text-lg font-semibold text-tierra-900">
+							{formatoRango(d.peso_g, 'g')}
+						</div>
+					</div>
+				)
+			}
+		</section>
+
+		<p class="mt-6 text-lg leading-relaxed text-tierra-800">{d.descripcion_corta}</p>
+
+		<section class="mt-8">
+			<CalendarioEstacional estacionalidad={d.estacionalidad} />
+		</section>
+
+		<section class="mt-8">
+			<h2 class="text-lg font-semibold text-tierra-900">Hábitat</h2>
+			<ul class="mt-3 flex flex-wrap gap-2">
+				{
+					d.habitats.map((h) => (
+						<li class="rounded-full bg-olivo-50 px-3 py-1 text-sm text-olivo-800">
+							{HABITAT_LABEL[h]}
+						</li>
+					))
+				}
+			</ul>
+			{
+				d.altitud_m && (
+					<p class="mt-3 text-sm text-tierra-700">
+						Rango altitudinal en la zona: <strong>{formatoRango(d.altitud_m, 'm')}</strong>
+					</p>
+				)
+			}
+		</section>
+
+		{
+			d.comportamiento && (
+				<section class="mt-8">
+					<h2 class="text-lg font-semibold text-tierra-900">Comportamiento</h2>
+					<p class="mt-2 text-tierra-800">{d.comportamiento}</p>
+				</section>
+			)
+		}
+
+		{
+			(d.canto_descripcion || d.canto_audio_url) && (
+				<section class="mt-8">
+					<h2 class="text-lg font-semibold text-tierra-900">Canto</h2>
+					{d.canto_descripcion && <p class="mt-2 text-tierra-800">{d.canto_descripcion}</p>}
+					{d.canto_audio_url && (
+						<p class="mt-2 text-sm">
+							<a href={d.canto_audio_url} target="_blank" rel="noopener">
+								Escuchar grabación en xeno-canto ↗
+							</a>
+						</p>
+					)}
+				</section>
+			)
+		}
+
+		{
+			d.puntos_buenos_avistamiento && d.puntos_buenos_avistamiento.length > 0 && (
+				<section class="mt-8">
+					<h2 class="text-lg font-semibold text-tierra-900">Dónde verla en la zona</h2>
+					<ul class="mt-2 list-inside list-disc text-tierra-800">
+						{d.puntos_buenos_avistamiento.map((p) => (
+							<li>{p}</li>
+						))}
+					</ul>
+				</section>
+			)
+		}
+
+		<section class="prose prose-stone mt-8 max-w-none">
+			<Content />
+		</section>
+
+		{
+			d.fuentes && (
+				<footer class="mt-10 rounded-lg border border-tierra-200 bg-tierra-50 p-4 text-sm text-tierra-700">
+					<h2 class="text-sm font-semibold uppercase tracking-wide text-tierra-600">
+						Fuentes
+					</h2>
+					<ul class="mt-2 space-y-1">
+						{d.fuentes.gbif_taxon_key && (
+							<li>
+								<a
+									href={`https://www.gbif.org/species/${d.fuentes.gbif_taxon_key}`}
+									target="_blank"
+									rel="noopener"
+								>
+									GBIF (taxón {d.fuentes.gbif_taxon_key}) ↗
+								</a>
+							</li>
+						)}
+						{d.fuentes.ebird_code && (
+							<li>
+								<a
+									href={`https://ebird.org/species/${d.fuentes.ebird_code}`}
+									target="_blank"
+									rel="noopener"
+								>
+									eBird ({d.fuentes.ebird_code}) ↗
+								</a>
+							</li>
+						)}
+						{d.fuentes.wikipedia_url && (
+							<li>
+								<a href={d.fuentes.wikipedia_url} target="_blank" rel="noopener">
+									Wikipedia ↗
+								</a>
+							</li>
+						)}
+					</ul>
+				</footer>
+			)
+		}
+	</article>
+</Layout>

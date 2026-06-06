@@ -1,0 +1,21 @@
+---
+import { LOCATION } from '../consts';
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-tierra-200 bg-tierra-100/40">
+	<div class="mx-auto max-w-5xl px-4 py-8 text-sm text-tierra-700">
+		<p>
+			Proyecto personal sobre la avifauna de <strong>{LOCATION.nombre} ({LOCATION.provincia})</strong>.
+		</p>
+		<p class="mt-2 text-tierra-700">
+			Desarrollado y mantenido por
+			<a href="mailto:hola@vlledo.es" class="font-bold text-tierra-900 no-underline hover:text-olivo-700 hover:underline">
+				Víctor Rodríguez Lledó
+			</a>.
+		</p>
+		<p class="mt-2 text-tierra-600">
+			&copy; {year} · Datos abiertos de GBIF, eBird, Wikipedia y xeno-canto.
+		</p>
+	</div>
+</footer>

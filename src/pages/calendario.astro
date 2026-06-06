@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import HeatmapEstacional from '../components/HeatmapEstacional.astro';
+import RiquezaMensual from '../components/RiquezaMensual.astro';
+import Layout from '../layouts/Layout.astro';
+
+const aves = (await getCollection('aves')).sort((a, b) =>
+	a.data.nombre_comun.localeCompare(b.data.nombre_comun, 'es'),
+);
+---
+
+<Layout title="Calendario" description="Cuándo ver cada ave en Los Villares: heatmap mes × especie y riqueza por mes.">
+	<header class="border-b border-tierra-200 pb-6">
+		<h1 class="text-3xl font-bold tracking-tight text-tierra-900">Calendario</h1>
+		<p class="mt-2 text-tierra-700">
+			Las {aves.length} especies del catálogo cruzadas con los 12 meses del año.
+			Cada celda indica el tipo de presencia que cabe esperar en Los Villares.
+		</p>
+	</header>
+
+	<section class="mt-8">
+		<RiquezaMensual aves={aves} />
+	</section>
+
+	<section class="mt-8">
+		<HeatmapEstacional aves={aves} />
+	</section>
+
+	<aside class="mt-8 rounded-lg border border-tierra-200 bg-tierra-50/60 p-4 text-sm text-tierra-700">
+		<p>
+			Pulsa el nombre de cualquier especie para abrir su ficha. Los datos de
+			estacionalidad son orientativos para la zona — agradeceré cualquier
+			corrección basada en observaciones de campo.
+		</p>
+	</aside>
+</Layout>

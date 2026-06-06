@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { meses } from '../content.config';
+import { MES_INICIAL, MES_LARGO } from '../utils/meses';
+
+interface Props {
+	aves: CollectionEntry<'aves'>[];
+}
+
+const { aves } = Astro.props;
+
+const conteoPorMes = meses.map((m) => ({
+	mes: m,
+	total: aves.filter((a) => a.data.estacionalidad[m] !== 'ausente').length,
+}));
+
+const max = Math.max(...conteoPorMes.map((c) => c.total), 1);
+---
+
+<div class="rounded-lg border border-tierra-200 bg-white p-4">
+	<div class="flex items-baseline justify-between">
+		<h3 class="text-sm font-semibold uppercase tracking-wide text-tierra-700">
+			Riqueza mensual
+		</h3>
+		<span class="text-xs text-tierra-500">
+			especies visibles por mes
+		</span>
+	</div>
+
+	<div class="mt-4 grid grid-cols-12 items-end gap-1.5" style="height: 8rem;">
+		{
+			conteoPorMes.map(({ mes, total }) => (
+				<div
+					class="group flex h-full flex-col items-center justify-end"
+					title={`${MES_LARGO[mes]}: ${total} especies`}
+				>
+					<span class="text-xs font-bold text-tierra-700">{total}</span>
+					<div
+						class="mt-1 w-full rounded-t bg-olivo-400 transition-colors group-hover:bg-olivo-600"
+						style={`height: ${(total / max) * 80}%; min-height: 4px;`}
+					/>
+				</div>
+			))
+		}
+	</div>
+
+	<div class="mt-1 grid grid-cols-12 gap-1.5 text-center text-xs text-tierra-600">
+		{meses.map((m) => <span>{MES_INICIAL[m]}</span>)}
+	</div>
+</div>

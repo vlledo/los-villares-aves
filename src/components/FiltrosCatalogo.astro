@@ -1,0 +1,116 @@
+---
+import { meses } from '../content.config';
+import { ABUNDANCIA_LABEL, HABITAT_LABEL } from '../utils/formato';
+import { MES_INICIAL, MES_LARGO } from '../utils/meses';
+
+interface Props {
+	habitatsDisponibles: string[];
+	abundanciasDisponibles: string[];
+	totalInicial: number;
+}
+
+const { habitatsDisponibles, abundanciasDisponibles, totalInicial } = Astro.props;
+
+const ABUNDANCIA_ORDEN = ['muy_comun', 'comun', 'escaso', 'raro'];
+const abundanciasOrdenadas = ABUNDANCIA_ORDEN.filter((a) => abundanciasDisponibles.includes(a));
+---
+
+<section
+	data-filtros
+	class="rounded-lg border border-tierra-200 bg-white p-4 shadow-sm"
+>
+	<div class="flex flex-col gap-4">
+		<div class="flex flex-wrap items-center gap-3">
+			<label class="flex-1 min-w-[200px]">
+				<span class="sr-only">Buscar por nombre</span>
+				<input
+					type="search"
+					data-filtro-texto
+					placeholder="Buscar por nombre común o científico…"
+					class="w-full rounded-md border border-tierra-200 bg-tierra-50 px-3 py-2 text-sm placeholder:text-tierra-400 focus:border-olivo-500 focus:outline-none focus:ring-1 focus:ring-olivo-500"
+				/>
+			</label>
+			<button
+				type="button"
+				data-filtro-reset
+				class="rounded-md border border-tierra-200 bg-tierra-50 px-3 py-2 text-xs text-tierra-700 hover:bg-tierra-100"
+			>
+				Limpiar
+			</button>
+		</div>
+
+		<div>
+			<div class="text-xs font-semibold uppercase tracking-wide text-tierra-500">
+				Mes
+			</div>
+			<div class="mt-2 flex flex-wrap gap-1">
+				<button
+					type="button"
+					data-filtro-mes=""
+					class="rounded-md border border-tierra-200 bg-olivo-100 px-3 py-1.5 text-xs font-semibold text-olivo-800"
+					aria-pressed="true"
+				>
+					Todos
+				</button>
+				{
+					meses.map((m) => (
+						<button
+							type="button"
+							data-filtro-mes={m}
+							title={MES_LARGO[m]}
+							class="h-8 w-8 rounded-md border border-tierra-200 bg-tierra-50 text-xs font-semibold text-tierra-700 hover:bg-tierra-100"
+							aria-pressed="false"
+						>
+							{MES_INICIAL[m]}
+						</button>
+					))
+				}
+			</div>
+		</div>
+
+		<div>
+			<div class="text-xs font-semibold uppercase tracking-wide text-tierra-500">
+				Hábitat
+			</div>
+			<div class="mt-2 flex flex-wrap gap-1">
+				{
+					habitatsDisponibles.map((h) => (
+						<button
+							type="button"
+							data-filtro-habitat={h}
+							class="rounded-full border border-tierra-200 bg-tierra-50 px-3 py-1 text-xs text-tierra-700 hover:bg-tierra-100"
+							aria-pressed="false"
+						>
+							{HABITAT_LABEL[h] ?? h}
+						</button>
+					))
+				}
+			</div>
+		</div>
+
+		<div>
+			<div class="text-xs font-semibold uppercase tracking-wide text-tierra-500">
+				Abundancia
+			</div>
+			<div class="mt-2 flex flex-wrap gap-1">
+				{
+					abundanciasOrdenadas.map((a) => (
+						<button
+							type="button"
+							data-filtro-abundancia={a}
+							class="rounded-full border border-tierra-200 bg-tierra-50 px-3 py-1 text-xs text-tierra-700 hover:bg-tierra-100"
+							aria-pressed="false"
+						>
+							{ABUNDANCIA_LABEL[a] ?? a}
+						</button>
+					))
+				}
+			</div>
+		</div>
+
+		<div class="text-sm text-tierra-700">
+			<span data-filtro-resultado>{totalInicial}</span>
+			<span> de {totalInicial} especies</span>
+		</div>
+	</div>
+</section>

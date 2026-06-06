@@ -1,0 +1,41 @@
+---
+import { SITE_TITLE } from '../consts';
+
+const links = [
+	{ href: '/', label: 'Inicio' },
+	{ href: '/aves', label: 'Aves' },
+	{ href: '/calendario', label: 'Calendario' },
+	{ href: '/sobre', label: 'Sobre' },
+];
+
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="border-b border-tierra-200 bg-tierra-50/90 backdrop-blur">
+	<div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
+		<a href="/" class="text-lg font-bold tracking-tight text-tierra-900 no-underline hover:text-olivo-700">
+			{SITE_TITLE}
+		</a>
+		<nav class="flex items-center gap-1 text-sm">
+			{
+				links.map((link) => {
+					const isActive =
+						link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
+					return (
+						<a
+							href={link.href}
+							class:list={[
+								'rounded-md px-3 py-1.5 no-underline transition-colors',
+								isActive
+									? 'bg-olivo-100 text-olivo-800 font-semibold'
+									: 'text-tierra-700 hover:bg-tierra-100 hover:text-tierra-900',
+							]}
+						>
+							{link.label}
+						</a>
+					);
+				})
+			}
+		</nav>
+	</div>
+</header>

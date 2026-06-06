@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import FiltrosCatalogo from '../../components/FiltrosCatalogo.astro';
+import Layout from '../../layouts/Layout.astro';
+import { ABUNDANCIA_LABEL } from '../../utils/formato';
+import {
+	abundanciasEnCatalogo,
+	habitatsEnCatalogo,
+	mesesPresentes,
+	normalizar,
+} from '../../utils/filtros';
+
+const aves = (await getCollection('aves')).sort((a, b) =>
+	a.data.nombre_comun.localeCompare(b.data.nombre_comun, 'es'),
+);
+
+const habitatsDisponibles = habitatsEnCatalogo(aves);
+const abundanciasDisponibles = abundanciasEnCatalogo(aves);
+---
+
+<Layout title="Catálogo de aves" description="Listado de aves observables en Los Villares (Jaén) con filtros por mes, hábitat y abundancia.">
+	<header class="border-b border-tierra-200 pb-6">
+		<h1 class="text-3xl font-bold tracking-tight text-tierra-900">Catálogo</h1>
+		<p class="mt-2 text-tierra-700">
+			{aves.length} {aves.length === 1 ? 'especie' : 'especies'} catalogadas.
+		</p>
+	</header>
+
+	<div class="mt-6">
+		<FiltrosCatalogo
+			habitatsDisponibles={habitatsDisponibles}
+			abundanciasDisponibles={abundanciasDisponibles}
+			totalInicial={aves.length}
+		/>
+	</div>
+
+	<ul
+		data-grid-aves
+		class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+	>
+		{
+			aves.map((ave) => (
+				<li
+					data-tarjeta
+					data-nombre={normalizar(`${ave.data.nombre_comun} ${ave.data.nombre_cientifico} ${ave.data.nombre_local ?? ''}`)}
+					data-meses={mesesPresentes(ave.data.estacionalidad).join(',')}
+					data-habitats={ave.data.habitats.join(',')}
+					data-abundancia={ave.data.abundancia}
+					class="overflow-hidden rounded-lg border border-tierra-200 bg-white transition hover:border-olivo-400 hover:shadow-md"
+				>
+					<a href={`/aves/${ave.id}/`} class="block no-underline">
+						{ave.data.foto_principal && (
+							<Image
+								src={ave.data.foto_principal}
+								alt={`Foto de ${ave.data.nombre_comun}`}
+								width={600}
+								height={400}
+								class="aspect-[3/2] w-full object-cover"
+							/>
+						)}
+						<div class="p-4">
+							<h2 class="text-lg font-semibold text-tierra-900">
+								{ave.data.nombre_comun}
+							</h2>
+							<p class="text-sm italic text-tierra-600">
+								{ave.data.nombre_cientifico}
+							</p>
+							<p class="mt-2 text-xs text-tierra-500 uppercase tracking-wide">
+								{ABUNDANCIA_LABEL[ave.data.abundancia]}
+							</p>
+						</div>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+
+	<p
+		data-vacio
+		hidden
+		class="mt-8 rounded-lg border border-dashed border-tierra-300 bg-tierra-50 p-6 text-center text-tierra-600"
+	>
+		Ningún ave coincide con los filtros aplicados.
+	</p>
+</Layout>
+
+<script>
+	import { initFiltrosCatalogo } from '../../scripts/filtros-catalogo';
+	initFiltrosCatalogo();
+</script>

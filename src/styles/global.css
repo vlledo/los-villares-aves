@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+
+@theme {
+	--font-sans:
+		var(--font-atkinson), ui-sans-serif, system-ui, sans-serif,
+		'Apple Color Emoji', 'Segoe UI Emoji';
+
+	--color-tierra-50: #faf7f1;
+	--color-tierra-100: #f1e9d8;
+	--color-tierra-200: #e4d5b3;
+	--color-tierra-300: #d2b884;
+	--color-tierra-400: #bf9a58;
+	--color-tierra-500: #a87f3d;
+	--color-tierra-600: #8b6630;
+	--color-tierra-700: #6c4f27;
+	--color-tierra-800: #4d3920;
+	--color-tierra-900: #2f2316;
+
+	--color-olivo-50: #f5f7ec;
+	--color-olivo-100: #e7edcb;
+	--color-olivo-200: #d0db98;
+	--color-olivo-300: #b3c466;
+	--color-olivo-400: #8fa343;
+	--color-olivo-500: #6e8232;
+	--color-olivo-600: #556627;
+	--color-olivo-700: #404e1f;
+	--color-olivo-800: #2d3717;
+	--color-olivo-900: #1c220f;
+}
+
+@layer base {
+	html {
+		font-family: var(--font-sans);
+		color: var(--color-tierra-900);
+		background: var(--color-tierra-50);
+	}
+
+	body {
+		min-height: 100vh;
+	}
+
+	a {
+		color: var(--color-olivo-700);
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+	}
+
+	a:hover {
+		color: var(--color-olivo-500);
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		color: var(--color-tierra-900);
+		font-weight: 700;
+		line-height: 1.15;
+	}
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}

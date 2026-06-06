@@ -1,0 +1,90 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { meses } from '../content.config';
+import { MES_INICIAL, MES_LARGO, PRESENCIA_COLOR, PRESENCIA_LABEL } from '../utils/meses';
+
+interface Props {
+	aves: CollectionEntry<'aves'>[];
+}
+
+const { aves } = Astro.props;
+---
+
+<div class="overflow-x-auto rounded-lg border border-tierra-200 bg-white">
+	<table class="min-w-full border-separate border-spacing-0 text-sm">
+		<thead class="bg-tierra-50">
+			<tr>
+				<th class="sticky left-0 z-10 bg-tierra-50 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-tierra-600">
+					Especie
+				</th>
+				{
+					meses.map((m) => (
+						<th
+							scope="col"
+							class="w-9 px-0 py-2 text-xs font-bold text-tierra-700"
+							title={MES_LARGO[m]}
+						>
+							{MES_INICIAL[m]}
+						</th>
+					))
+				}
+			</tr>
+		</thead>
+		<tbody>
+			{
+				aves.map((ave, i) => (
+					<tr class:list={['group', i % 2 === 0 ? 'bg-white' : 'bg-tierra-50/40']}>
+						<th
+							scope="row"
+							class:list={[
+								'sticky left-0 z-10 px-3 py-1.5 text-left font-normal',
+								'group-hover:bg-olivo-50',
+								i % 2 === 0 ? 'bg-white' : 'bg-tierra-50/40',
+							]}
+						>
+							<a
+								href={`/aves/${ave.id}/`}
+								class="text-tierra-800 no-underline hover:text-olivo-700"
+							>
+								<span class="block font-medium">{ave.data.nombre_comun}</span>
+								<span class="block text-[11px] italic text-tierra-500">
+									{ave.data.nombre_cientifico}
+								</span>
+							</a>
+						</th>
+						{
+							meses.map((m) => {
+								const valor = ave.data.estacionalidad[m];
+								const color = PRESENCIA_COLOR[valor] ?? PRESENCIA_COLOR.ausente;
+								return (
+									<td
+										class="px-0.5 py-1"
+										title={`${ave.data.nombre_comun} · ${MES_LARGO[m]}: ${PRESENCIA_LABEL[valor]}`}
+									>
+										<div
+											class:list={[
+												'mx-auto h-6 w-7 rounded transition-transform group-hover:scale-110',
+												color,
+											]}
+										/>
+									</td>
+								);
+							})
+						}
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
+</div>
+
+<div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-tierra-600">
+	{
+		Object.entries(PRESENCIA_LABEL).map(([key, label]) => (
+			<span class="flex items-center gap-2">
+				<span class:list={['inline-block h-3 w-4 rounded', PRESENCIA_COLOR[key]]} />
+				{label}
+			</span>
+		))
+	}
+</div>

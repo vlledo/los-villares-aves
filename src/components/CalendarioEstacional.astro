@@ -1,0 +1,49 @@
+---
+import { meses } from '../content.config';
+import { MES_INICIAL, MES_LARGO, PRESENCIA_COLOR, PRESENCIA_LABEL } from '../utils/meses';
+
+interface Props {
+	estacionalidad: Record<string, string>;
+}
+
+const { estacionalidad } = Astro.props;
+---
+
+<div class="rounded-lg border border-tierra-200 bg-white p-4">
+	<div class="flex items-center justify-between">
+		<h3 class="text-sm font-semibold uppercase tracking-wide text-tierra-700">
+			Estacionalidad en Los Villares
+		</h3>
+	</div>
+	<div class="mt-3 grid grid-cols-12 gap-1">
+		{
+			meses.map((m) => {
+				const valor = estacionalidad[m] ?? 'ausente';
+				const color = PRESENCIA_COLOR[valor] ?? PRESENCIA_COLOR.ausente;
+				return (
+					<div class="flex flex-col items-center gap-1">
+						<div
+							class:list={[
+								'flex h-8 w-full items-center justify-center rounded text-xs font-bold',
+								color,
+							]}
+							title={`${MES_LARGO[m]}: ${PRESENCIA_LABEL[valor]}`}
+						>
+							{MES_INICIAL[m]}
+						</div>
+					</div>
+				);
+			})
+		}
+	</div>
+	<div class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-tierra-600">
+		{
+			Object.entries(PRESENCIA_LABEL).map(([key, label]) => (
+				<span class="flex items-center gap-1">
+					<span class:list={['inline-block h-3 w-3 rounded', PRESENCIA_COLOR[key]]} />
+					{label}
+				</span>
+			))
+		}
+	</div>
+</div>
