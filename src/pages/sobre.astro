@@ -4,36 +4,76 @@ import { LOCATION } from '../consts';
 ---
 
 <Layout title="Sobre el proyecto" description="Sobre el catálogo de aves de Los Villares.">
-	<article class="prose prose-stone max-w-none">
-		<h1>Sobre el proyecto</h1>
-		<p>
-			Este es un catálogo personal de las aves observables en
-			<strong>{LOCATION.nombre} ({LOCATION.provincia})</strong>, en la sierra sur de Jaén.
-		</p>
-		<p>
-			Cada ficha recoge los datos imprescindibles para identificar la especie en campo y
-			saber cuándo y dónde es probable verla: tamaño, hábitat, comportamiento,
-			estacionalidad mes a mes y puntos buenos de avistamiento en la zona.
-		</p>
-		<h2>Fuentes</h2>
-		<ul>
-			<li>
-				<a href="https://www.gbif.org/" target="_blank" rel="noopener">GBIF</a> —
-				observaciones georreferenciadas.
-			</li>
-			<li>
-				<a href="https://ebird.org/" target="_blank" rel="noopener">eBird</a> — listas y
-				códigos de especies.
-			</li>
-			<li>
-				<a href="https://www.wikipedia.org/" target="_blank" rel="noopener">Wikipedia</a>
-				y <a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a> —
-				descripciones generales.
-			</li>
-			<li>
-				<a href="https://xeno-canto.org/" target="_blank" rel="noopener">xeno-canto</a> —
-				grabaciones de canto.
-			</li>
-		</ul>
+	<article class="mx-auto max-w-2xl text-tierra-800">
+		<h1 class="text-4xl font-bold tracking-tight text-tierra-900">Sobre el proyecto</h1>
+
+		<div class="mt-6 space-y-4 text-lg leading-relaxed">
+			<p>
+				Este es un catálogo personal de las aves observables en
+				<strong>{LOCATION.nombre} ({LOCATION.provincia})</strong>, en la sierra
+				sur de Jaén.
+			</p>
+			<p>
+				Cada ficha recoge los datos imprescindibles para identificar la especie en
+				campo y saber cuándo y dónde es probable verla: tamaño, hábitat,
+				comportamiento, estacionalidad mes a mes y puntos buenos de avistamiento en
+				la zona.
+			</p>
+		</div>
+
+		<section class="mt-12 border-t border-tierra-200 pt-8">
+			<h2 class="text-2xl font-bold tracking-tight text-tierra-900">
+				Un proyecto de aficionado
+			</h2>
+			<p class="mt-4 leading-relaxed">
+				No soy ornitólogo profesional. Soy una persona que disfruta y admira su
+				entorno natural, y muy especialmente la avifauna que comparte el pueblo y
+				la sierra con nosotros. Lo que ves aquí lo he ido aprendiendo observando,
+				preguntando y leyendo, apoyado en las fuentes citadas más abajo. Es muy
+				probable que haya errores o imprecisiones — si los detectas, te agradezco
+				mucho que me lo cuentes.
+			</p>
+		</section>
+
+		<section class="mt-12 border-t border-tierra-200 pt-8">
+			<h2 class="text-2xl font-bold tracking-tight text-tierra-900">Colabora</h2>
+			<p class="mt-4 leading-relaxed">
+				El catálogo está abierto a aportaciones. Si quieres proponer una
+				corrección, sugerir una especie nueva que falta, compartir un punto de
+				avistamiento, una grabación, una foto o simplemente comentar cualquier cosa
+				sobre las aves de la zona, escríbeme a
+				<a href="mailto:hola@vlledo.es" class="font-semibold">hola@vlledo.es</a>.
+				Toda observación suma.
+			</p>
+		</section>
+
+		<section class="mt-12 border-t border-tierra-200 pt-8">
+			<h2 class="text-2xl font-bold tracking-tight text-tierra-900">Fuentes</h2>
+			<p class="mt-4 leading-relaxed">
+				Este proyecto se apoya en — y quiere apoyar a — iniciativas de datos
+				abiertos sobre biodiversidad. Toda la información viene de proyectos
+				colaborativos que cualquiera puede consultar, enriquecer y reutilizar:
+			</p>
+			<ul class="mt-4 space-y-2 leading-relaxed">
+				<li>
+					<a href="https://www.gbif.org/" target="_blank" rel="noopener">GBIF</a> —
+					observaciones georreferenciadas.
+				</li>
+				<li>
+					<a href="https://ebird.org/" target="_blank" rel="noopener">eBird</a> —
+					listas y códigos de especies.
+				</li>
+				<li>
+					<a href="https://www.wikipedia.org/" target="_blank" rel="noopener">Wikipedia</a>
+					y
+					<a href="https://www.wikidata.org/" target="_blank" rel="noopener">Wikidata</a>
+					— descripciones generales.
+				</li>
+				<li>
+					<a href="https://xeno-canto.org/" target="_blank" rel="noopener">xeno-canto</a>
+					— grabaciones de canto.
+				</li>
+			</ul>
+		</section>
 	</article>
 </Layout>
