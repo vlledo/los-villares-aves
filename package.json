@@ -13,6 +13,7 @@
     "fichas:generar": "node scripts/generate-fichas.ts",
     "cantos:generar": "node --env-file=.env scripts/generate-cantos.ts",
     "fichas:enriquecer": "node --env-file=.env scripts/enriquecer-fichas.ts",
+    "faltantes:listar": "node --env-file=.env scripts/descubrir-faltantes.ts",
     "og:generar": "node scripts/generate-og.ts"
   },
   "dependencies": {

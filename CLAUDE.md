@@ -13,14 +13,17 @@ Astro 6 + MDX, Tailwind 4 (vía `@tailwindcss/vite`, sin `tailwind.config`), `sh
 ## Comandos
 
 ```bash
-npm run dev               # Astro dev server en http://localhost:4321
-npm run build             # Build estático en dist/
-npm run preview           # Sirve dist/
-npm run fichas:generar    # Crea fichas autogeneradas (foto + frontmatter base con TODOs)
-npm run cantos:generar    # Embebe audio de xeno-canto para fichas que no lo tengan
-npm run fichas:enriquecer # Rellena tamano/envergadura/peso (Wikipedia) + estacionalidad (eBird)
-npm run og:generar        # Regenera public/og.png a partir de SVG inline
+npm run dev                # Astro dev server en http://localhost:4321
+npm run build              # Build estático en dist/
+npm run preview            # Sirve dist/
+npm run faltantes:listar   # Lista especies en hotspots eBird ≤10 km que aún no tenemos
+npm run fichas:generar     # Crea fichas autogeneradas (foto + frontmatter base con TODOs)
+npm run cantos:generar     # Embebe audio de xeno-canto para fichas que no lo tengan
+npm run fichas:enriquecer  # Rellena tamano/envergadura/peso (Wikipedia) + estacionalidad (eBird) + hábitats + abundancia
+npm run og:generar         # Regenera public/og.png a partir de SVG inline
 ```
+
+`faltantes:listar` admite `--top N` (default 30) y `--json` (output pegable en `scripts/aves-iniciales.json`). Ejemplo de flujo: `npm run faltantes:listar -- --top 20 --json`.
 
 No hay test suite ni linter — `astro check` / `tsc --noEmit` son la verificación de tipos disponible. La verificación funcional real es `npm run build` (Zod valida cada `.mdx` durante el build).
 
@@ -44,6 +47,24 @@ node scripts/check-imagen.ts "Gyps fulvus" "Aquila fasciata"
 **Las páginas consumen la colección directamente** vía `getCollection('aves')` y pasan `CollectionEntry<'aves'>[]` a los componentes. No hay capa de datos intermedia. Los utilitarios de `src/utils/filtros.ts` operan sobre entradas crudas.
 
 **Filtrado en cliente sin framework.** El catálogo (`/aves`) y el calendario son HTML estático: cada tarjeta lleva `data-meses`, `data-habitats`, `data-abundancia`, `data-nombre`. El script vanilla en `src/scripts/filtros-catalogo.ts` lee/escribe `aria-pressed` y oculta filas mediante el atributo `hidden`. No usar React/Svelte/Vue — el patrón es deliberado.
+
+## Estado del catálogo y próximo lote
+
+**Última actualización: 2026-06-07** (commit `719d6bb`). El catálogo tiene **82 fichas** publicadas. eBird registra **~156 especies** en hotspots a ≤10 km del pueblo, así que quedan **~77 especies por importar**.
+
+**Para arrancar el siguiente lote**, lanza:
+```bash
+npm run faltantes:listar -- --top 20
+```
+Te lista las 20 especies más frecuentes en hotspots locales que aún no están en el catálogo. Añade `--json` para sacar entries pegables directamente en `scripts/aves-iniciales.json`. Antes de pegar: filtra los falsos positivos por mismatch taxonómico (la primera entrada del listado a 2026-06-07 es **Curruca cabecinegra**, que ya está cubierta — la guardamos bajo `Sylvia melanocephala` pero eBird usa `Curruca`).
+
+**Convención de tamaño de lote: ~20 especies por iteración**, no más. Importar en bloque mayor amplifica errores de regex/heurística y dificulta la revisión humana posterior. El usuario espera ver un resumen del enriquecimiento entre lotes antes de continuar.
+
+Mantén actualizada esta cifra cuando hagas otro commit grande. El recuento exacto vive en:
+- `ls src/content/aves/*.mdx | wc -l` (fichas en el catálogo)
+- `npm run faltantes:listar` (cuenta de cobertura vs unión de hotspots)
+
+Si la memoria de Claude Code (en `~/.claude/projects/.../memory/`) está intacta, los mismos hechos están en archivos `project_catalog_state.md`, `feedback_batch_size.md`, etc., como caché secundaria. La fuente de verdad es este `CLAUDE.md` porque está versionado.
 
 ## Flujo para añadir o sincronizar especies
 
