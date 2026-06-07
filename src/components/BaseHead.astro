@@ -41,3 +41,13 @@ const fullTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`;
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={new URL('/og.png', Astro.site)} />
+
+{
+	import.meta.env.PROD && (
+		<script
+			defer
+			src="https://static.cloudflareinsights.com/beacon.min.js"
+			data-cf-beacon='{"token": "d34716462cbb4277866d26e6e6141719"}'
+		/>
+	)
+}
