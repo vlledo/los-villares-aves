@@ -12,6 +12,7 @@
     "astro": "astro",
     "fichas:generar": "node scripts/generate-fichas.ts",
     "cantos:generar": "node --env-file=.env scripts/generate-cantos.ts",
+    "fichas:enriquecer": "node --env-file=.env scripts/enriquecer-fichas.ts",
     "og:generar": "node scripts/generate-og.ts"
   },
   "dependencies": {

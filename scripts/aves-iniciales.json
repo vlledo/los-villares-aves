@@ -69,6 +69,27 @@
 		{ "slug": "avion-roquero", "nombre_comun": "Avión roquero", "nombre_cientifico": "Ptyonoprogne rupestris" },
 
 		{ "slug": "perdiz-roja", "nombre_comun": "Perdiz roja", "nombre_cientifico": "Alectoris rufa" },
-		{ "slug": "codorniz-comun", "nombre_comun": "Codorniz común", "nombre_cientifico": "Coturnix coturnix" }
+		{ "slug": "codorniz-comun", "nombre_comun": "Codorniz común", "nombre_cientifico": "Coturnix coturnix" },
+
+		{ "slug": "paloma-bravia", "nombre_comun": "Paloma bravía", "nombre_cientifico": "Columba livia" },
+		{ "slug": "golondrina-daurica", "nombre_comun": "Golondrina dáurica", "nombre_cientifico": "Cecropis rufula" },
+		{ "slug": "mosquitero-comun", "nombre_comun": "Mosquitero común", "nombre_cientifico": "Phylloscopus collybita" },
+		{ "slug": "carbonero-garrapinos", "nombre_comun": "Carbonero garrapinos", "nombre_cientifico": "Periparus ater" },
+		{ "slug": "papamoscas-gris", "nombre_comun": "Papamoscas gris", "nombre_cientifico": "Muscicapa striata" },
+		{ "slug": "escribano-triguero", "nombre_comun": "Escribano triguero", "nombre_cientifico": "Emberiza calandra" },
+		{ "slug": "piquituerto-comun", "nombre_comun": "Piquituerto común", "nombre_cientifico": "Loxia curvirostra" },
+		{ "slug": "zorzal-charlo", "nombre_comun": "Zorzal charlo", "nombre_cientifico": "Turdus viscivorus" },
+		{ "slug": "aguilucho-lagunero", "nombre_comun": "Aguilucho lagunero occidental", "nombre_cientifico": "Circus aeruginosus" },
+		{ "slug": "bisbita-pratense", "nombre_comun": "Bisbita pratense", "nombre_cientifico": "Anthus pratensis" },
+		{ "slug": "cogujada-montesina", "nombre_comun": "Cogujada montesina", "nombre_cientifico": "Galerida theklae" },
+		{ "slug": "pardillo-comun", "nombre_comun": "Pardillo común", "nombre_cientifico": "Linaria cannabina" },
+		{ "slug": "vencejo-palido", "nombre_comun": "Vencejo pálido", "nombre_cientifico": "Apus pallidus" },
+		{ "slug": "alcaudon-real", "nombre_comun": "Alcaudón real", "nombre_cientifico": "Lanius meridionalis" },
+		{ "slug": "gaviota-sombria", "nombre_comun": "Gaviota sombría", "nombre_cientifico": "Larus fuscus" },
+		{ "slug": "herrerillo-capuchino", "nombre_comun": "Herrerillo capuchino", "nombre_cientifico": "Lophophanes cristatus" },
+		{ "slug": "vencejo-real", "nombre_comun": "Vencejo real", "nombre_cientifico": "Tachymarptis melba" },
+		{ "slug": "anade-azulon", "nombre_comun": "Ánade azulón", "nombre_cientifico": "Anas platyrhynchos" },
+		{ "slug": "arrendajo", "nombre_comun": "Arrendajo euroasiático", "nombre_cientifico": "Garrulus glandarius" },
+		{ "slug": "ciguena-blanca", "nombre_comun": "Cigüeña blanca", "nombre_cientifico": "Ciconia ciconia" }
 	]
 }
