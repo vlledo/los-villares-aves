@@ -39,7 +39,7 @@ const { aves } = Astro.props;
 					<tr
 						data-tarjeta
 						data-meses={mesesPresentes(ave.data.estacionalidad).join(',')}
-						class:list={['group', i % 2 === 0 ? 'bg-white' : 'bg-tierra-50']}
+						class:list={['group hover:bg-olivo-50', i % 2 === 0 ? 'bg-white' : 'bg-tierra-50']}
 					>
 						<th
 							scope="row"
