@@ -139,14 +139,38 @@ const uicn = UICN_LABEL[d.estado_uicn];
 		}
 
 		{
-			(d.canto_descripcion || d.canto_audio_url) && (
+			(d.canto_descripcion || d.canto_audio_url || d.fuentes?.xeno_canto_id) && (
 				<section class="mt-8">
 					<h2 class="text-lg font-semibold text-tierra-900">Canto</h2>
 					{d.canto_descripcion && <p class="mt-2 text-tierra-800">{d.canto_descripcion}</p>}
+					{d.fuentes?.xeno_canto_id && (
+						<figure class="mt-3">
+							<audio
+								controls
+								preload="none"
+								src={`https://xeno-canto.org/${d.fuentes.xeno_canto_id}/download`}
+								class="w-full"
+							>
+								Tu navegador no soporta audio HTML5.
+							</audio>
+							{d.canto_audio_credito && (
+								<figcaption class="mt-2 text-xs text-tierra-500">
+									{d.canto_audio_credito} ·{' '}
+									<a
+										href={`https://xeno-canto.org/${d.fuentes.xeno_canto_id}`}
+										target="_blank"
+										rel="noopener"
+									>
+										ver grabación ↗
+									</a>
+								</figcaption>
+							)}
+						</figure>
+					)}
 					{d.canto_audio_url && (
 						<p class="mt-2 text-sm">
 							<a href={d.canto_audio_url} target="_blank" rel="noopener">
-								Escuchar grabación en xeno-canto ↗
+								Más grabaciones en xeno-canto ↗
 							</a>
 						</p>
 					)}

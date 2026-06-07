@@ -77,6 +77,7 @@ const aves = defineCollection({
 			comportamiento: z.string().optional(),
 			canto_descripcion: z.string().optional(),
 			canto_audio_url: z.string().url().optional(),
+			canto_audio_credito: z.string().optional(),
 			puntos_buenos_avistamiento: z.array(z.string()).optional(),
 
 			estado_uicn: estadoUICN.default('LC'),

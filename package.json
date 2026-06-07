@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "fichas:generar": "node scripts/generate-fichas.ts",
+    "cantos:generar": "node --env-file=.env scripts/generate-cantos.ts",
     "og:generar": "node scripts/generate-og.ts"
   },
   "dependencies": {
