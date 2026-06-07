@@ -16,7 +16,7 @@ const { aves } = Astro.props;
 		<thead>
 			<tr>
 				<th
-					class="sticky left-0 top-16 z-30 border-b border-tierra-200 bg-tierra-50 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-tierra-600"
+					class="sticky left-0 z-30 border-b border-tierra-200 bg-tierra-50 px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-tierra-600 md:top-16"
 				>
 					Especie
 				</th>
@@ -24,7 +24,7 @@ const { aves } = Astro.props;
 					meses.map((m) => (
 						<th
 							scope="col"
-							class="sticky top-16 z-20 w-9 border-b border-tierra-200 bg-tierra-50 px-0 py-2 text-xs font-bold text-tierra-700"
+							class="z-20 w-9 border-b border-tierra-200 bg-tierra-50 px-0 py-2 text-xs font-bold text-tierra-700 md:sticky md:top-16"
 							title={MES_LARGO[m]}
 						>
 							{MES_INICIAL[m]}
@@ -39,14 +39,14 @@ const { aves } = Astro.props;
 					<tr
 						data-tarjeta
 						data-meses={mesesPresentes(ave.data.estacionalidad).join(',')}
-						class:list={['group', i % 2 === 0 ? 'bg-white' : 'bg-tierra-50/40']}
+						class:list={['group', i % 2 === 0 ? 'bg-white' : 'bg-tierra-50']}
 					>
 						<th
 							scope="row"
 							class:list={[
 								'sticky left-0 z-10 px-3 py-1.5 text-left font-normal',
 								'group-hover:bg-olivo-50',
-								i % 2 === 0 ? 'bg-white' : 'bg-tierra-50/40',
+								i % 2 === 0 ? 'bg-white' : 'bg-tierra-50',
 							]}
 						>
 							<a
