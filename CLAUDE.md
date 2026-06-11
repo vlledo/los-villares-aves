@@ -50,13 +50,13 @@ node scripts/check-imagen.ts "Gyps fulvus" "Aquila fasciata"
 
 ## Estado del catálogo y próximo lote
 
-**Última actualización: 2026-06-07** (commit `719d6bb`). El catálogo tiene **82 fichas** publicadas. eBird registra **~156 especies** en hotspots a ≤10 km del pueblo, así que quedan **~77 especies por importar**.
+**Última actualización: 2026-06-11**. El catálogo tiene **101 fichas** publicadas. eBird registra **~156 especies** en hotspots a ≤10 km del pueblo, así que quedan **~55 especies por importar**.
 
 **Para arrancar el siguiente lote**, lanza:
 ```bash
 npm run faltantes:listar -- --top 20
 ```
-Te lista las 20 especies más frecuentes en hotspots locales que aún no están en el catálogo. Añade `--json` para sacar entries pegables directamente en `scripts/aves-iniciales.json`. Antes de pegar: filtra los falsos positivos por mismatch taxonómico (la primera entrada del listado a 2026-06-07 es **Curruca cabecinegra**, que ya está cubierta — la guardamos bajo `Sylvia melanocephala` pero eBird usa `Curruca`).
+Te lista las 20 especies más frecuentes en hotspots locales que aún no están en el catálogo. Añade `--json` para sacar entries pegables directamente en `scripts/aves-iniciales.json`. Antes de pegar: filtra los falsos positivos por mismatch taxonómico (a 2026-06-07 la cabecera era *Curruca cabecinegra*, que se cubre como `Sylvia melanocephala`; ahora ya tiene `ebird_code: sarwar1` y no debería reaparecer).
 
 **Convención de tamaño de lote: ~20 especies por iteración**, no más. Importar en bloque mayor amplifica errores de regex/heurística y dificulta la revisión humana posterior. El usuario espera ver un resumen del enriquecimiento entre lotes antes de continuar.
 

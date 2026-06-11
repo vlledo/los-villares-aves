@@ -42,6 +42,19 @@ function sleep(ms: number): Promise<void> {
 	return new Promise((r) => setTimeout(r, ms));
 }
 
+async function fetchWithRetry(url: string, init: RequestInit, attempts = 5): Promise<Response> {
+	let last: Response | undefined;
+	for (let i = 0; i < attempts; i++) {
+		const res = await fetch(url, init);
+		if (res.ok) return res;
+		if (res.status !== 429 && res.status < 500) return res;
+		last = res;
+		const wait = 1000 * Math.pow(3, i);
+		await sleep(wait);
+	}
+	return last as Response;
+}
+
 interface Range {
 	min: number;
 	max: number;
@@ -163,7 +176,7 @@ async function buildPresenceMaps(): Promise<PresenceMaps> {
 	for (let month = 1; month <= 12; month++) {
 		for (const day of SAMPLE_DAYS) {
 			const url = `https://api.ebird.org/v2/data/obs/${REGION}/historic/${YEAR}/${month}/${day}?cat=species&maxResults=10000`;
-			const res = await fetch(url, { headers: { 'X-eBirdApiToken': EBIRD_KEY! } });
+			const res = await fetchWithRetry(url, { headers: { 'X-eBirdApiToken': EBIRD_KEY! } });
 			if (!res.ok) {
 				console.warn(`  ! HTTP ${res.status} en ${YEAR}-${month}-${day}`);
 				continue;
@@ -180,13 +193,17 @@ async function buildPresenceMaps(): Promise<PresenceMaps> {
 	console.log(`  ${monthly.size} sp con observaciones mensuales.`);
 
 	console.log(`Construyendo presencia por hotspot en ${HOTSPOT_RADIUS_KM} km…`);
-	const hotspotsRes = await fetch(
+	const hotspotsRes = await fetchWithRetry(
 		`https://api.ebird.org/v2/ref/hotspot/geo?lat=${HOTSPOT_LAT}&lng=${HOTSPOT_LON}&dist=${HOTSPOT_RADIUS_KM}&fmt=json`,
 		{ headers: { 'X-eBirdApiToken': EBIRD_KEY! } },
 	);
+	if (!hotspotsRes.ok) {
+		console.warn(`  ! No se pudo obtener hotspots (HTTP ${hotspotsRes.status}); abundancia se queda sin actualizar.`);
+		return { monthly, hotspotCount };
+	}
 	const hs = (await hotspotsRes.json()) as Array<{ locId: string; lat: number; lng: number }>;
 	for (const h of hs) {
-		const r = await fetch(`https://api.ebird.org/v2/product/spplist/${h.locId}`, {
+		const r = await fetchWithRetry(`https://api.ebird.org/v2/product/spplist/${h.locId}`, {
 			headers: { 'X-eBirdApiToken': EBIRD_KEY! },
 		});
 		if (!r.ok) continue;

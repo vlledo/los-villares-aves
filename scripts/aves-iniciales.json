@@ -90,6 +90,25 @@
 		{ "slug": "vencejo-real", "nombre_comun": "Vencejo real", "nombre_cientifico": "Tachymarptis melba" },
 		{ "slug": "anade-azulon", "nombre_comun": "Ánade azulón", "nombre_cientifico": "Anas platyrhynchos" },
 		{ "slug": "arrendajo", "nombre_comun": "Arrendajo euroasiático", "nombre_cientifico": "Garrulus glandarius" },
-		{ "slug": "ciguena-blanca", "nombre_comun": "Cigüeña blanca", "nombre_cientifico": "Ciconia ciconia" }
+		{ "slug": "ciguena-blanca", "nombre_comun": "Cigüeña blanca", "nombre_cientifico": "Ciconia ciconia" },
+		{ "slug": "cisticola-buitron", "nombre_comun": "Cistícola buitrón", "nombre_cientifico": "Cisticola juncidis" },
+		{ "slug": "escribano-montesino", "nombre_comun": "Escribano montesino", "nombre_cientifico": "Emberiza cia" },
+		{ "slug": "garcilla-bueyera", "nombre_comun": "Garcilla bueyera", "nombre_cientifico": "Bubulcus ibis" },
+		{ "slug": "ruisenor-comun", "nombre_comun": "Ruiseñor común", "nombre_cientifico": "Luscinia megarhynchos" },
+		{ "slug": "trepador-azul", "nombre_comun": "Trepador azul", "nombre_cientifico": "Sitta europaea" },
+		{ "slug": "abejero-europeo", "nombre_comun": "Abejero europeo", "nombre_cientifico": "Pernis apivorus" },
+		{ "slug": "acentor-alpino", "nombre_comun": "Acentor alpino", "nombre_cientifico": "Prunella collaris" },
+		{ "slug": "aguila-imperial-iberica", "nombre_comun": "Águila imperial ibérica", "nombre_cientifico": "Aquila adalberti" },
+		{ "slug": "alcaravan-comun", "nombre_comun": "Alcaraván común", "nombre_cientifico": "Burhinus oedicnemus" },
+		{ "slug": "alcaudon-comun", "nombre_comun": "Alcaudón común", "nombre_cientifico": "Lanius senator" },
+		{ "slug": "avion-zapador", "nombre_comun": "Avión zapador", "nombre_cientifico": "Riparia riparia" },
+		{ "slug": "azor-comun", "nombre_comun": "Azor común", "nombre_cientifico": "Accipiter gentilis" },
+		{ "slug": "buitre-negro", "nombre_comun": "Buitre negro", "nombre_cientifico": "Aegypius monachus" },
+		{ "slug": "collalba-negra", "nombre_comun": "Collalba negra", "nombre_cientifico": "Oenanthe leucura" },
+		{ "slug": "estornino-pinto", "nombre_comun": "Estornino pinto", "nombre_cientifico": "Sturnus vulgaris" },
+		{ "slug": "jilguero-lugano", "nombre_comun": "Jilguero lúgano", "nombre_cientifico": "Spinus spinus" },
+		{ "slug": "papamoscas-cerrojillo", "nombre_comun": "Papamoscas cerrojillo", "nombre_cientifico": "Ficedula hypoleuca" },
+		{ "slug": "alondra-totovia", "nombre_comun": "Alondra totovía", "nombre_cientifico": "Lullula arborea" },
+		{ "slug": "buho-chico", "nombre_comun": "Búho chico", "nombre_cientifico": "Asio otus" }
 	]
 }

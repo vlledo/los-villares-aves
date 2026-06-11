@@ -145,6 +145,21 @@ const NON_PHOTO_KEYWORDS = [
 	'detail',
 	'chick',
 	'juvenile-in-hand',
+	'aircraft',
+	'airplane',
+	'jet',
+	'helicopter',
+	'fighter',
+	'bomber',
+	'navy',
+	't-45',
+	'usaf',
+	'warship',
+	'destroyer',
+	'frigate',
+	'submarine',
+	'tank',
+	'locomotive',
 ];
 
 function isLikelyNonPhoto(title: string): boolean {
@@ -264,7 +279,7 @@ export async function pickBestPhoto(
 	}
 
 	try {
-		const found = await searchImages(scientificName, 25, 1920);
+		const found = await searchImages(scientificName, 50, 1920);
 		for (const f of found) {
 			candidates.push({ ...f, source: 'commons-search' });
 		}
