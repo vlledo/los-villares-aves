@@ -156,6 +156,35 @@ Mantén actualizada esta cifra cuando hagas otro commit grande. El recuento exac
 
 Si la memoria de Claude Code (en `~/.claude/projects/.../memory/`) está intacta, los mismos hechos están en archivos `project_catalog_state.md`, `feedback_batch_size.md`, etc., como caché secundaria. La fuente de verdad es este `CLAUDE.md` porque está versionado.
 
+## Bitácora
+
+Colección `bitacora` (definida en `src/content.config.ts`) con entradas en `src/content/bitacora/*.mdx`. Cada entrada es un **micropost**: fecha + 1-2 frases sobre una novedad del sitio. Tono cercano y breve, sin título.
+
+**Frontmatter:**
+```yaml
+fecha: 2026-06-12              # obligatoria, ISO
+especies:                      # opcional, solo si la entrada anuncia aves nuevas
+  - lavandera-cascadena
+```
+
+- `fecha` es obligatoria; Zod la convierte a `Date`.
+- `especies` es opcional; si está presente debe tener al menos un slug y todos deben existir en la colección `aves` (validado en build por `src/utils/bitacora.ts → obtenerEntradasBitacora`, que rompe con error claro si encuentra un slug inválido).
+- Cuerpo MDX libre. Para enlazar especies: `[nombre común](/aves/<slug>/)`.
+
+**Convención de nombre:** `YYYY-MM-DD-slug-breve.mdx`.
+
+**Cuándo crear entrada:**
+- Al importar nuevas especies → entrada con `especies: [...]` listando los slugs.
+- Al hacer una mejora transversal (criterio nuevo, secciones nuevas, hitos como llegar a 150 fichas) → entrada sin `especies`.
+
+**Dónde se ve:**
+- Página `/bitacora/` lista todas las entradas agrupadas por mes.
+- Portada (`src/pages/index.astro`) muestra dos bloques al final, debajo del CTA: "Últimas añadidas" (4 fotos de las últimas especies aparecidas en entradas con `especies`) y "Bitácora" (3 últimos micropost de cualquier tipo).
+- Entrada "Bitácora" en `src/components/Header.astro`, entre "Calendario" y "Sobre".
+
+**Spec original:** [`docs/superpowers/specs/2026-06-12-bitacora-design.md`](docs/superpowers/specs/2026-06-12-bitacora-design.md).
+**Plan de implementación:** [`docs/superpowers/plans/2026-06-12-bitacora.md`](docs/superpowers/plans/2026-06-12-bitacora.md).
+
 ## Flujo para añadir o sincronizar especies
 
 El catálogo se amplía en lotes. El objetivo aproximado son las **~156 especies registradas en eBird en un radio de 10 km** del pueblo. El flujo idempotente es:
