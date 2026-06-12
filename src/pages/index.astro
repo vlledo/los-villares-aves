@@ -1,8 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import CarruselDestacadas from '../components/CarruselDestacadas.astro';
 import Layout from '../layouts/Layout.astro';
 import { LOCATION } from '../consts';
+import { formatoFechaCorta, obtenerEntradasBitacora } from '../utils/bitacora';
 
 const aves = await getCollection('aves');
 const totalEspecies = aves.length;
@@ -21,6 +22,16 @@ const destacadas = aves
 		(a, b) =>
 			ORDEN_DESTACADAS.indexOf(a.id) - ORDEN_DESTACADAS.indexOf(b.id),
 	);
+
+const entradasBitacora = await obtenerEntradasBitacora();
+const ultimosMicropost = entradasBitacora.slice(0, 3);
+const ultimosMicropostRender = await Promise.all(
+	ultimosMicropost.map(async (e) => {
+		const { Content } = await render(e);
+		return [e.id, Content] as const;
+	}),
+);
+const contentMicropost = new Map(ultimosMicropostRender);
 ---
 
 <Layout>
@@ -50,6 +61,39 @@ const destacadas = aves
 					</a>
 				</div>
 				<CarruselDestacadas aves={destacadas} />
+			</section>
+		)
+	}
+
+	{
+		ultimosMicropost.length > 0 && (
+			<section class="mt-10">
+				<div class="mb-4 flex items-baseline justify-between">
+					<h2 class="text-sm font-semibold uppercase tracking-wide text-tierra-700">
+						Bitácora
+					</h2>
+					<a
+						href="/bitacora"
+						class="text-sm text-olivo-700 no-underline hover:underline"
+					>
+						Ver toda la bitácora →
+					</a>
+				</div>
+				<div class="space-y-6">
+					{ultimosMicropost.map((entrada) => {
+						const Content = contentMicropost.get(entrada.id)!;
+						return (
+							<article class="border-l-2 border-olivo-200 pl-4">
+								<div class="text-xs uppercase tracking-wide text-tierra-500">
+									{formatoFechaCorta(entrada.data.fecha)}
+								</div>
+								<div class="prose prose-stone mt-2 max-w-none text-tierra-800">
+									<Content />
+								</div>
+							</article>
+						);
+					})}
+				</div>
 			</section>
 		)
 	}
