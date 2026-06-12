@@ -1,0 +1,91 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import {
+	agruparPorMes,
+	formatoFechaCorta,
+	obtenerEntradasBitacora,
+} from '../utils/bitacora';
+
+const entradas = await obtenerEntradasBitacora();
+const grupos = agruparPorMes(entradas);
+
+const entradasRender = await Promise.all(
+	entradas.map(async (e) => {
+		const { Content } = await render(e);
+		return [e.id, Content] as const;
+	}),
+);
+const contentPorId = new Map(entradasRender);
+---
+
+<Layout title="Bitácora" description="Novedades del catálogo de aves de Los Villares: nuevas especies, mejoras y cambios.">
+	<article class="mx-auto max-w-3xl">
+		<header class="border-b border-tierra-200 pb-6">
+			<h1 class="text-4xl font-bold tracking-tight text-tierra-900">
+				Bitácora
+			</h1>
+			<p class="mt-3 text-lg text-tierra-700">
+				Novedades del catálogo: nuevas aves añadidas, mejoras de las fichas y
+				cambios del sitio. Notas breves en orden cronológico.
+			</p>
+		</header>
+
+		{
+			grupos.length === 0 && (
+				<p class="mt-8 text-tierra-600">
+					Aún no hay entradas en la bitácora.
+				</p>
+			)
+		}
+
+		{
+			grupos.map(([titulo, entradasMes]) => (
+				<section class="mt-10">
+					<h2 class="text-sm font-semibold uppercase tracking-wide text-tierra-700">
+						{titulo}
+					</h2>
+					<div class="mt-4 space-y-8">
+						{entradasMes.map((entrada) => {
+							const Content = contentPorId.get(entrada.id)!;
+							return (
+								<article class="border-l-2 border-olivo-200 pl-4">
+									<div class="text-xs uppercase tracking-wide text-tierra-500">
+										{formatoFechaCorta(entrada.data.fecha)}
+									</div>
+									<div class="prose prose-stone mt-2 max-w-none text-tierra-800">
+										<Content />
+									</div>
+									{entrada.especiesResueltas.length > 0 && (
+										<div class="mt-3 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:thin]">
+											{entrada.especiesResueltas.map((ave) => (
+												<a
+													href={`/aves/${ave.id}/`}
+													class="group block w-28 shrink-0 no-underline"
+												>
+													{ave.data.foto_principal && (
+														<Image
+															src={ave.data.foto_principal}
+															alt={`Foto de ${ave.data.nombre_comun}`}
+															width={240}
+															height={160}
+															class="aspect-[3/2] w-full rounded-md object-cover transition-transform group-hover:scale-[1.03]"
+														/>
+													)}
+													<div class="mt-1 text-xs font-medium text-tierra-800 group-hover:text-olivo-700">
+														{ave.data.nombre_comun}
+													</div>
+												</a>
+											))}
+										</div>
+									)}
+								</article>
+							);
+						})}
+					</div>
+				</section>
+			))
+		}
+	</article>
+</Layout>
