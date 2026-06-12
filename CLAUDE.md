@@ -48,9 +48,99 @@ node scripts/check-imagen.ts "Gyps fulvus" "Aquila fasciata"
 
 **Filtrado en cliente sin framework.** El catálogo (`/aves`) y el calendario son HTML estático: cada tarjeta lleva `data-meses`, `data-habitats`, `data-abundancia`, `data-nombre`. El script vanilla en `src/scripts/filtros-catalogo.ts` lee/escribe `aria-pressed` y oculta filas mediante el atributo `hidden`. No usar React/Svelte/Vue — el patrón es deliberado.
 
+## Estructura y tono de una ficha
+
+Una ficha "completa" tiene **6 secciones** que se reparten entre el frontmatter y el cuerpo MDX. El template `src/pages/aves/[...slug].astro` renderiza unas u otras según haya contenido. Las dos fichas modelo de referencia son **`abejaruco-europeo.mdx`** y **`aguila-perdicera.mdx`**.
+
+**Del frontmatter (campos opcionales pero esperados):**
+
+1. `comportamiento: >` — 3-5 líneas. Cría, dieta, vuelo característico, sociabilidad, comportamiento estacional notable.
+2. `canto_descripcion: >` — 2-4 líneas. Onomatopeya del reclamo/canto entre comillas, contexto (rama alta, en vuelo, época), comparación con otras especies si ayuda.
+3. `puntos_buenos_avistamiento: [...]` — 3 puntos concretos del entorno de Los Villares (Sierra de la Pandera, embalse del Quiebrajano, olivares al sur, taludes del arroyo de la Parrilla, etc.). Específicos, no genéricos.
+4. (opcional) `amenazas_locales: [...]` — 2-3 amenazas concretas mencionables en la sección Conservación del body. Se suele incluir cuando hay material relevante.
+
+**Del cuerpo MDX (encabezados `##`):**
+
+5. `## Identificación en campo` — Lista de bullets con rasgos diagnósticos en negrita (cabeza, pecho, alas, cola, juveniles vs adultos). Cerrar con confusiones posibles con otras especies de la zona.
+6. `## Calendario en Los Villares` — 2 párrafos. Empezar con categoría en negrita (**residente** / **estival** / **invernante** / **paso** / **raro**) y rango de meses para cría o paso. Segundo párrafo opcional sobre comportamiento estacional, bandos invernales, etc.
+7. `## Conservación` — 1 párrafo. Tres escalas: estado UICN global → situación en España (datos SACRE/PECBMS/SEO/BirdLife) → amenaza o medida local concreta. Cerrar siempre con una medida accionable cuando sea posible (cajas nido, conservar muros tradicionales, evitar limpieza excesiva, sustituir tendidos peligrosos, etc.).
+
+**Tono general:**
+
+- Prosa fluida en español, párrafos cortos (1-2 párrafos por sección).
+- Negrita Markdown (`**...**`) **solo en el cuerpo MDX** (las secciones `##`). En los campos del frontmatter (`descripcion_corta`, `comportamiento`, `canto_descripcion`) el template `[...slug].astro` los interpola como texto plano con `{d.campo}` — los `**` saldrían literales en la página. Esos campos deben ser prosa limpia sin marcado.
+- Mencionar siempre la geografía local concreta (Sierra Sur de Jaén, Sierra de la Pandera, embalse del Quiebrajano, olivar jiennense, casco urbano del pueblo) en vez de descripciones genéricas.
+- Citar fuentes secundarias por nombre cuando aplique (SEO/BirdLife, programa SACRE, PECBMS, SEPRONA) sin enlaces inline — los enlaces oficiales están en `fuentes` del frontmatter.
+
+**Fuentes de información para redactar cada sección:**
+
+Las fichas se redactan a partir del conocimiento general ornitológico combinado con organismos y programas de referencia:
+
+| Sección | Fuente principal | Notas |
+|---|---|---|
+| `descripcion_corta`, `## Identificación en campo` | Guías de campo de paseriformes ibéricas (SEO/BirdLife, Lynx Edicions, Collins) y conocimiento general. **No copiar prosa de Wikipedia** — debe ser síntesis con tono propio. |
+| `comportamiento` | Conocimiento general de la especie + adaptaciones locales (paisaje mediterráneo, olivar, cortados jiennenses). |
+| `canto_descripcion` | Caracterización fonética de la grabación xeno-canto referenciada en `fuentes.xeno_canto_id` + onomatopeyas españolas estándar. |
+| `puntos_buenos_avistamiento` | Geografía local concreta del término de Los Villares y entorno (Sierra de la Pandera, embalse del Quiebrajano, arroyo de la Parrilla, casco urbano). 3 puntos específicos, no genéricos. |
+| `amenazas_locales` | Combinación de amenazas estructurales (mismo set: electrocución, cebos envenenados, rodenticidas, intensificación, rehabilitaciones) ajustadas a cada especie según su ecología. |
+| `## Calendario en Los Villares` | Estacionalidad del propio frontmatter (`estacionalidad: ene…dic`) traducida a prosa. Categorías estandarizadas: **residente / estival / invernante / paso / raro** según el patrón mensual (ver tabla más abajo). Añadir ciclo reproductor y comportamientos estacionales relevantes (cortejo, dormideros, paso). |
+| `## Conservación` | **Tres escalas obligatorias**: estado UICN global (referenciar el `estado_uicn` del frontmatter: LC, NT, VU, EN, CR, DD, EX) → tendencia España (SACRE de SEO/BirdLife, PECBMS para Europa) → contexto local (Sierra Sur, conflictos concretos, programas LIFE relevantes). Cerrar con medida accionable cuando sea posible. |
+
+**Definición operativa de las categorías de `estacionalidad` mensual:**
+
+El enum `presenciaMes` (en `content.config.ts`) admite seis valores. Cada uno tiene una semántica concreta —no son intercambiables y el color con que se pintan en el calendario (`src/utils/meses.ts → PRESENCIA_COLOR`) está pensado para distinguirlos visualmente:
+
+| Valor | Color en calendario | Significa | Ejemplo |
+|---|---|---|---|
+| `residente` | Verde olivo | Presente todo el año en territorios estables y predecibles | Mirlo, paloma torcaz, perdiz roja |
+| `estival` | Ámbar | Presente solo en verano, cría en la zona, migra a África en invierno | Abejaruco, oropéndola, vencejo común |
+| `invernante` | Azul cielo | Presente solo en invierno, llega del N. de Europa, parte en primavera | Zorzal común, mosquitero común, milano real |
+| `paso` | Verde claro | Solo en migración, no cría ni inverna en la zona, presencia predecible en pasos | Abejero europeo, papamoscas cerrojillo, avión zapador |
+| `raro` | Rosa | **Aparición esporádica e impredecible**: divagantes, irrupciones según cosechas, recolonización lenta, observaciones puntuales. NO sustituye a `paso` (que tiene patrón estacional) ni a `invernante`/`estival` (predecibles) | Águila imperial (divagante), jilguero lúgano (irrupción según año), piquituerto (nómada), buitre negro (recolonización), acentor alpino (irrupción invernal irregular) |
+| `ausente` | Gris claro | No presente en ese mes | (uso obvio) |
+
+**Regla práctica para distinguir `raro` de las demás:**
+- Si la especie viene **cada año más o menos en las mismas fechas** → usar la categoría predecible (`residente`/`estival`/`invernante`/`paso`).
+- Si la especie viene **algunos años sí y otros no**, depende de cosechas/sequías/movimientos divagantes, o es una recolonización en curso → usar `raro`.
+- Los marcadores narrativos en el cuerpo MDX (frases tipo "presencia irregular", "nómada", "divagante", "irrupción") son señales de que la estacionalidad debería usar `raro` en lugar de la categoría predecible.
+
+**Programas y referencias citables por nombre:**
+
+- **UICN** (Unión Internacional para la Conservación de la Naturaleza) — fuente del estado global.
+- **CEEA** (Catálogo Español de Especies Amenazadas) — categorías nacionales (Vulnerable, En Peligro, etc.).
+- **SACRE** (Seguimiento de Aves Comunes Reproductoras, SEO/BirdLife) — tendencias en España.
+- **PECBMS** (Pan-European Common Bird Monitoring Scheme) — tendencias europeas.
+- **Noctua** (SEO/BirdLife) — programa específico para rapaces nocturnas.
+- **SEPRONA** (Guardia Civil) — para amenazas relacionadas con caza ilegal o envenenamiento.
+- **Programas LIFE específicos**: LIFE PRIMILLA (cernícalo primilla), LIFE Eurokite (milano real), proyecto Antídoto (envenenamientos), proyectos de reintroducción andaluces.
+
+**Lo que NO se documenta automáticamente y siempre requiere revisión humana antes de publicar:**
+
+- Dimensiones inverosímiles emitidas por el regex de `fichas:enriquecer` (a veces toma envergadura como tamaño, o ediciones ridículas tipo `peso_g: [130, 130]` para una especie de 3kg). Auditar siempre `tamano_cm`, `envergadura_cm`, `peso_g` antes de cerrar la ficha.
+- Patrones de `estacionalidad` mal asignados a migrantes (la heurística cuela "residente" si hay observaciones residuales fuera de época normal).
+- `habitats` heurísticamente asignados que no encajen con la ecología real (un ave esteparia como `bordes_de_camino` cuando debería ser `campos_cultivo`).
+- Texto duplicado entre `descripcion_corta` y `## Identificación en campo` —debe ser prosa diferente, no copia.
+
+Las fichas incompletas son válidas en build (todos esos campos son opcionales en `content.config.ts`), pero el objetivo de unificación es que las 101 tengan las 6 secciones canónicas. El estado de cobertura se puede auditar en cualquier momento con:
+
+```bash
+for f in src/content/aves/*.mdx; do
+  name=$(basename "$f" .mdx)
+  comp=$(grep -E "^comportamiento: " "$f" > /dev/null && echo "S" || echo "-")
+  canto=$(grep -E "^canto_descripcion: " "$f" > /dev/null && echo "S" || echo "-")
+  pba=$(awk '/^puntos_buenos_avistamiento:/{flag=1; next} /^[a-z_]+:/{flag=0} flag && /^  - /{c++} END{print (c>0)?"S":"-"}' "$f")
+  ident=$(grep -F "## Identificación en campo" "$f" > /dev/null && echo "S" || echo "-")
+  cal=$(grep -F "## Calendario en Los Villares" "$f" > /dev/null && echo "S" || echo "-")
+  cons=$(grep -F "## Conservación" "$f" > /dev/null && echo "S" || echo "-")
+  printf "%-40s %s%s%s %s%s%s\n" "$name" "$comp" "$canto" "$pba" "$ident" "$cal" "$cons"
+done
+```
+
 ## Estado del catálogo y próximo lote
 
-**Última actualización: 2026-06-11**. El catálogo tiene **101 fichas** publicadas. eBird registra **~156 especies** en hotspots a ≤10 km del pueblo, así que quedan **~55 especies por importar**.
+**Última actualización: 2026-06-12**. El catálogo tiene **101 fichas** publicadas, **todas al 6/6** (las 6 secciones canónicas completas, ver sección "Estructura y tono de una ficha"). eBird registra **~156 especies** en hotspots a ≤10 km del pueblo, así que quedan **~55 especies por importar**.
+
+**Repaso de unificación completado (2026-06-12).** Las 101 fichas existentes pasaron de un estado heterogéneo (con muchas a 0-4/6) a estar todas al 6/6 mediante 19 lotes de 5 fichas con revisión humana entre lotes. Aprovechando el rework se corrigieron también varios bugs estructurales: dimensiones inverosímiles en frontmatter (peso=130g del águila imperial, envergadura=38cm del alcaraván, envergadura=14cm del trepador-azul) y estacionalidades absurdas en estivales (saltos may→ausente→jun en vencejo-real, oct/sep=estival en papamoscas-gris). Cualquier ficha que se importe a partir de ahora debe cumplir el estándar 6/6 desde el principio.
 
 **Para arrancar el siguiente lote**, lanza:
 ```bash
