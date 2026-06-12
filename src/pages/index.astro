@@ -1,9 +1,14 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
 import CarruselDestacadas from '../components/CarruselDestacadas.astro';
 import Layout from '../layouts/Layout.astro';
 import { LOCATION } from '../consts';
-import { formatoFechaCorta, obtenerEntradasBitacora } from '../utils/bitacora';
+import {
+	formatoFechaCorta,
+	obtenerEntradasBitacora,
+	ultimasEspeciesUnicas,
+} from '../utils/bitacora';
 
 const aves = await getCollection('aves');
 const totalEspecies = aves.length;
@@ -32,6 +37,8 @@ const ultimosMicropostRender = await Promise.all(
 	}),
 );
 const contentMicropost = new Map(ultimosMicropostRender);
+
+const ultimasAves = ultimasEspeciesUnicas(entradasBitacora, 4);
 ---
 
 <Layout>
@@ -90,8 +97,52 @@ const contentMicropost = new Map(ultimosMicropostRender);
 	</section>
 
 	{
-		ultimosMicropost.length > 0 && (
+		ultimasAves.length > 0 && (
 			<section class="mt-12">
+				<div class="mb-4 flex items-baseline justify-between">
+					<h2 class="text-sm font-semibold uppercase tracking-wide text-tierra-700">
+						Últimas añadidas
+					</h2>
+					<a
+						href="/bitacora"
+						class="text-sm text-olivo-700 no-underline hover:underline"
+					>
+						Ver todas las novedades →
+					</a>
+				</div>
+				<div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+					{ultimasAves.map((ave) => (
+						<a
+							href={`/aves/${ave.id}/`}
+							class="group block overflow-hidden rounded-lg border border-tierra-200 bg-white no-underline shadow-sm"
+						>
+							{ave.data.foto_principal && (
+								<Image
+									src={ave.data.foto_principal}
+									alt={`Foto de ${ave.data.nombre_comun}`}
+									width={400}
+									height={260}
+									class="aspect-[3/2] w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+								/>
+							)}
+							<div class="px-3 py-2">
+								<div class="text-sm font-semibold text-tierra-900 group-hover:text-olivo-700">
+									{ave.data.nombre_comun}
+								</div>
+								<div class="text-xs italic text-tierra-500">
+									{ave.data.nombre_cientifico}
+								</div>
+							</div>
+						</a>
+					))}
+				</div>
+			</section>
+		)
+	}
+
+	{
+		ultimosMicropost.length > 0 && (
+			<section class="mt-10">
 				<div class="mb-4 flex items-baseline justify-between">
 					<h2 class="text-sm font-semibold uppercase tracking-wide text-tierra-700">
 						Bitácora
