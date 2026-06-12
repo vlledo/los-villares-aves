@@ -100,6 +100,14 @@ const aves = defineCollection({
 		}),
 });
 
-export const collections = { aves };
+const bitacora = defineCollection({
+	loader: glob({ base: './src/content/bitacora', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		fecha: z.date(),
+		especies: z.array(z.string()).min(1).optional(),
+	}),
+});
+
+export const collections = { aves, bitacora };
 
 export { meses, presenciaMes, abundancia, habitat, estadoUICN };
