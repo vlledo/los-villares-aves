@@ -10,6 +10,9 @@ const links = [
 ];
 
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const isActive = (href: string) =>
+	href === '/' ? pathname === '/' : pathname.startsWith(href);
 ---
 
 <header class="sticky top-0 z-50 h-16 border-b border-tierra-200 bg-tierra-50/95 backdrop-blur">
@@ -17,26 +20,80 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 		<a href="/" class="text-lg font-bold tracking-tight text-tierra-900 no-underline hover:text-olivo-700">
 			{SITE_TITLE}
 		</a>
-		<nav class="flex items-center gap-1 text-sm">
+
+		<nav class="hidden sm:flex items-center gap-1 text-sm">
 			{
-				links.map((link) => {
-					const isActive =
-						link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
-					return (
-						<a
-							href={link.href}
-							class:list={[
-								'rounded-md px-3 py-1.5 no-underline transition-colors',
-								isActive
-									? 'bg-olivo-100 text-olivo-800 font-semibold'
-									: 'text-tierra-700 hover:bg-tierra-100 hover:text-tierra-900',
-							]}
-						>
-							{link.label}
-						</a>
-					);
-				})
+				links.map((link) => (
+					<a
+						href={link.href}
+						class:list={[
+							'rounded-md px-3 py-1.5 no-underline transition-colors',
+							isActive(link.href)
+								? 'bg-olivo-100 text-olivo-800 font-semibold'
+								: 'text-tierra-700 hover:bg-tierra-100 hover:text-tierra-900',
+						]}
+					>
+						{link.label}
+					</a>
+				))
+			}
+		</nav>
+
+		<button
+			type="button"
+			class="sm:hidden flex items-center justify-center rounded-md p-2 text-tierra-700 hover:bg-tierra-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olivo-600"
+			aria-label="Abrir menú"
+			aria-expanded="false"
+			aria-controls="menu-mobile-panel"
+			data-menu-mobile-trigger
+		>
+			<svg class="menu-mobile-icon-bars h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+				<line x1="4" y1="7" x2="20" y2="7" />
+				<line x1="4" y1="12" x2="20" y2="12" />
+				<line x1="4" y1="17" x2="20" y2="17" />
+			</svg>
+			<svg class="menu-mobile-icon-close hidden h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+				<line x1="6" y1="6" x2="18" y2="18" />
+				<line x1="18" y1="6" x2="6" y2="18" />
+			</svg>
+		</button>
+	</div>
+
+	<div
+		id="menu-mobile-panel"
+		data-menu-mobile-panel
+		hidden
+		class="sm:hidden absolute left-0 right-0 top-16 border-b border-tierra-200 bg-tierra-50 shadow-sm transition-opacity duration-150"
+	>
+		<nav class="mx-auto flex max-w-5xl flex-col px-4 py-2 text-sm">
+			{
+				links.map((link) => (
+					<a
+						href={link.href}
+						class:list={[
+							'rounded-md px-4 py-3 no-underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olivo-600',
+							isActive(link.href)
+								? 'bg-olivo-100 text-olivo-800 font-semibold'
+								: 'text-tierra-700 hover:bg-tierra-100 hover:text-tierra-900',
+						]}
+					>
+						{link.label}
+					</a>
+				))
 			}
 		</nav>
 	</div>
 </header>
+
+<style>
+	[data-menu-mobile-trigger][aria-expanded="true"] .menu-mobile-icon-bars {
+		display: none;
+	}
+	[data-menu-mobile-trigger][aria-expanded="true"] .menu-mobile-icon-close {
+		display: block;
+	}
+</style>
+
+<script>
+	import '../scripts/menu-mobile.ts';
+</script>
