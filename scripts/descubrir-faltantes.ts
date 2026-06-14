@@ -1,4 +1,4 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +7,9 @@ const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, '..');
 const CONTENT_DIR = path.join(ROOT, 'src/content/aves');
 const CONSTS_PATH = path.join(ROOT, 'src/consts.ts');
+const CACHE_DIR = path.join(ROOT, 'scripts/.cache');
+const TAXONOMY_CACHE = path.join(CACHE_DIR, 'ebird-taxonomy.json');
+const TAXONOMY_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 const EBIRD_KEY = process.env.EBIRD_API_KEY;
 if (!EBIRD_KEY) {
@@ -76,10 +79,25 @@ interface TaxEntry {
 }
 
 async function fetchTaxonomy(): Promise<Map<string, TaxEntry>> {
+	try {
+		const s = await stat(TAXONOMY_CACHE);
+		if (Date.now() - s.mtimeMs < TAXONOMY_TTL_MS) {
+			const cached = JSON.parse(await readFile(TAXONOMY_CACHE, 'utf8')) as TaxEntry[];
+			process.stderr.write(`  (taxonomía en caché, ${cached.length} entradas)\n`);
+			return new Map(cached.map((t) => [t.speciesCode, t]));
+		}
+	} catch {
+		// no cache: caer al fetch
+	}
+	process.stderr.write(`  (bajando taxonomía de eBird, ~15000 especies)\n`);
 	const res = await fetch('https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json&locale=es', {
 		headers: { 'X-eBirdApiToken': EBIRD_KEY! },
 	});
+	if (!res.ok) throw new Error(`Taxonomía HTTP ${res.status}`);
 	const tax = (await res.json()) as TaxEntry[];
+	await mkdir(CACHE_DIR, { recursive: true });
+	await writeFile(TAXONOMY_CACHE, JSON.stringify(tax));
+	process.stderr.write(`  (taxonomía cacheada en ${path.relative(ROOT, TAXONOMY_CACHE)})\n`);
 	return new Map(tax.map((t) => [t.speciesCode, t]));
 }
 
@@ -110,7 +128,7 @@ async function main() {
 	}
 	process.stderr.write(`  ${presence.size} especies únicas en la unión\n`);
 
-	process.stderr.write(`bajando taxonomía de eBird (~15000 especies)…\n`);
+	process.stderr.write(`resolviendo taxonomía…\n`);
 	const tax = await fetchTaxonomy();
 
 	const missing: Array<{ code: string; count: number; sci: string; name: string; slug: string }> = [];

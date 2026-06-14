@@ -28,3 +28,6 @@ pnpm-debug.log*
 
 # netlify local state
 .netlify/
+
+# scripts cache (taxonomía eBird, etc.)
+scripts/.cache/
