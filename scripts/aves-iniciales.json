@@ -109,6 +109,27 @@
 		{ "slug": "jilguero-lugano", "nombre_comun": "Jilguero lúgano", "nombre_cientifico": "Spinus spinus" },
 		{ "slug": "papamoscas-cerrojillo", "nombre_comun": "Papamoscas cerrojillo", "nombre_cientifico": "Ficedula hypoleuca" },
 		{ "slug": "alondra-totovia", "nombre_comun": "Alondra totovía", "nombre_cientifico": "Lullula arborea" },
-		{ "slug": "buho-chico", "nombre_comun": "Búho chico", "nombre_cientifico": "Asio otus" }
+		{ "slug": "buho-chico", "nombre_comun": "Búho chico", "nombre_cientifico": "Asio otus" },
+
+		{ "slug": "ciguenuela-comun", "nombre_comun": "Cigüeñuela común", "nombre_cientifico": "Himantopus himantopus" },
+		{ "slug": "corneja-negra", "nombre_comun": "Corneja negra", "nombre_cientifico": "Corvus corone" },
+		{ "slug": "cotorra-argentina", "nombre_comun": "Cotorra argentina", "nombre_cientifico": "Myiopsitta monachus" },
+		{ "slug": "focha-comun", "nombre_comun": "Focha común", "nombre_cientifico": "Fulica atra" },
+		{ "slug": "gorrion-chillon", "nombre_comun": "Gorrión chillón", "nombre_cientifico": "Petronia petronia" },
+		{ "slug": "pito-iberico", "nombre_comun": "Pito ibérico", "nombre_cientifico": "Picus sharpei" },
+		{ "slug": "rabilargo-iberico", "nombre_comun": "Rabilargo ibérico", "nombre_cientifico": "Cyanopica cooki" },
+		{ "slug": "zampullin-comun", "nombre_comun": "Zampullín común", "nombre_cientifico": "Tachybaptus ruficollis" },
+		{ "slug": "zarcero-poliglota", "nombre_comun": "Zarcero políglota", "nombre_cientifico": "Hippolais polyglotta" },
+		{ "slug": "zorzal-alirrojo", "nombre_comun": "Zorzal alirrojo", "nombre_cientifico": "Turdus iliacus" },
+		{ "slug": "aguilucho-cenizo", "nombre_comun": "Aguilucho cenizo", "nombre_cientifico": "Circus pygargus" },
+		{ "slug": "andarrios-grande", "nombre_comun": "Andarríos grande", "nombre_cientifico": "Tringa ochropus" },
+		{ "slug": "autillo-europeo", "nombre_comun": "Autillo europeo", "nombre_cientifico": "Otus scops" },
+		{ "slug": "carricero-comun", "nombre_comun": "Carricero común", "nombre_cientifico": "Acrocephalus scirpaceus" },
+		{ "slug": "chorlitejo-chico", "nombre_comun": "Chorlitejo chico", "nombre_cientifico": "Charadrius dubius" },
+		{ "slug": "chotacabras-cuellirrojo", "nombre_comun": "Chotacabras cuellirrojo", "nombre_cientifico": "Caprimulgus ruficollis" },
+		{ "slug": "escribano-soteno", "nombre_comun": "Escribano soteño", "nombre_cientifico": "Emberiza cirlus" },
+		{ "slug": "flamenco-comun", "nombre_comun": "Flamenco común", "nombre_cientifico": "Phoenicopterus roseus" },
+		{ "slug": "garceta-comun", "nombre_comun": "Garceta común", "nombre_cientifico": "Egretta garzetta" },
+		{ "slug": "gaviota-reidora", "nombre_comun": "Gaviota reidora", "nombre_cientifico": "Chroicocephalus ridibundus" }
 	]
 }
