@@ -130,6 +130,27 @@
 		{ "slug": "escribano-soteno", "nombre_comun": "Escribano soteño", "nombre_cientifico": "Emberiza cirlus" },
 		{ "slug": "flamenco-comun", "nombre_comun": "Flamenco común", "nombre_cientifico": "Phoenicopterus roseus" },
 		{ "slug": "garceta-comun", "nombre_comun": "Garceta común", "nombre_cientifico": "Egretta garzetta" },
-		{ "slug": "gaviota-reidora", "nombre_comun": "Gaviota reidora", "nombre_cientifico": "Chroicocephalus ridibundus" }
+		{ "slug": "gaviota-reidora", "nombre_comun": "Gaviota reidora", "nombre_cientifico": "Chroicocephalus ridibundus" },
+
+		{ "slug": "inseparable-de-namibia", "nombre_comun": "Inseparable de Namibia", "nombre_cientifico": "Agapornis roseicollis" },
+		{ "slug": "morito-comun", "nombre_comun": "Morito común", "nombre_cientifico": "Plegadis falcinellus" },
+		{ "slug": "mosquitero-musical", "nombre_comun": "Mosquitero musical", "nombre_cientifico": "Phylloscopus trochilus" },
+		{ "slug": "pato-colorado", "nombre_comun": "Pato colorado", "nombre_cientifico": "Netta rufina" },
+		{ "slug": "picogordo-comun", "nombre_comun": "Picogordo común", "nombre_cientifico": "Coccothraustes coccothraustes" },
+		{ "slug": "porron-europeo", "nombre_comun": "Porrón europeo", "nombre_cientifico": "Aythya ferina" },
+		{ "slug": "reyezuelo-sencillo", "nombre_comun": "Reyezuelo sencillo", "nombre_cientifico": "Regulus regulus" },
+		{ "slug": "anade-friso", "nombre_comun": "Ánade friso", "nombre_cientifico": "Mareca strepera" },
+		{ "slug": "anade-rabudo", "nombre_comun": "Ánade rabudo", "nombre_cientifico": "Anas acuta" },
+		{ "slug": "andarrios-chico", "nombre_comun": "Andarríos chico", "nombre_cientifico": "Actitis hypoleucos" },
+		{ "slug": "ansar-comun", "nombre_comun": "Ánsar común", "nombre_cientifico": "Anser anser" },
+		{ "slug": "avefria-europea", "nombre_comun": "Avefría europea", "nombre_cientifico": "Vanellus vanellus" },
+		{ "slug": "calandria-comun", "nombre_comun": "Calandria común", "nombre_cientifico": "Melanocorypha calandra" },
+		{ "slug": "cetia-ruisenor", "nombre_comun": "Cetia ruiseñor", "nombre_cientifico": "Cettia cetti" },
+		{ "slug": "chotacabras-europeo", "nombre_comun": "Chotacabras europeo", "nombre_cientifico": "Caprimulgus europaeus" },
+		{ "slug": "collalba-rubia-occidental", "nombre_comun": "Collalba rubia occidental", "nombre_cientifico": "Oenanthe hispanica" },
+		{ "slug": "curruca-carrasquena-occidental", "nombre_comun": "Curruca carrasqueña occidental", "nombre_cientifico": "Sylvia iberiae" },
+		{ "slug": "curruca-mirlona-occidental", "nombre_comun": "Curruca mirlona occidental", "nombre_cientifico": "Sylvia hortensis" },
+		{ "slug": "curruca-rabilarga", "nombre_comun": "Curruca rabilarga", "nombre_cientifico": "Sylvia undata" },
+		{ "slug": "curruca-tomillera", "nombre_comun": "Curruca tomillera", "nombre_cientifico": "Sylvia conspicillata" }
 	]
 }
