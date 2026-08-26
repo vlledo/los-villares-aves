@@ -151,6 +151,23 @@
 		{ "slug": "curruca-carrasquena-occidental", "nombre_comun": "Curruca carrasqueña occidental", "nombre_cientifico": "Sylvia iberiae" },
 		{ "slug": "curruca-mirlona-occidental", "nombre_comun": "Curruca mirlona occidental", "nombre_cientifico": "Sylvia hortensis" },
 		{ "slug": "curruca-rabilarga", "nombre_comun": "Curruca rabilarga", "nombre_cientifico": "Sylvia undata" },
-		{ "slug": "curruca-tomillera", "nombre_comun": "Curruca tomillera", "nombre_cientifico": "Sylvia conspicillata" }
+		{ "slug": "curruca-tomillera", "nombre_comun": "Curruca tomillera", "nombre_cientifico": "Sylvia conspicillata" },
+		{ "slug": "curruca-zarcera", "nombre_comun": "Curruca zarcera", "nombre_cientifico": "Sylvia communis" },
+		{ "slug": "estrilda-comun", "nombre_comun": "Estrilda común", "nombre_cientifico": "Estrilda astrild" },
+		{ "slug": "garcilla-cangrejera", "nombre_comun": "Garcilla cangrejera", "nombre_cientifico": "Ardeola ralloides" },
+		{ "slug": "garza-imperial", "nombre_comun": "Garza imperial", "nombre_cientifico": "Ardea purpurea" },
+		{ "slug": "gaviota-patiamarilla", "nombre_comun": "Gaviota patiamarilla", "nombre_cientifico": "Larus michahellis" },
+		{ "slug": "gorrion-moruno", "nombre_comun": "Gorrión moruno", "nombre_cientifico": "Passer hispaniolensis" },
+		{ "slug": "grulla-comun", "nombre_comun": "Grulla común", "nombre_cientifico": "Grus grus" },
+		{ "slug": "lavandera-boyera", "nombre_comun": "Lavandera boyera", "nombre_cientifico": "Motacilla flava" },
+		{ "slug": "martin-pescador-comun", "nombre_comun": "Martín pescador común", "nombre_cientifico": "Alcedo atthis" },
+		{ "slug": "martinete-comun", "nombre_comun": "Martinete común", "nombre_cientifico": "Nycticorax nycticorax" },
+		{ "slug": "mirlo-capiblanco", "nombre_comun": "Mirlo capiblanco", "nombre_cientifico": "Turdus torquatus" },
+		{ "slug": "mosquitero-papialbo", "nombre_comun": "Mosquitero papialbo", "nombre_cientifico": "Phylloscopus bonelli" },
+		{ "slug": "porron-pardo", "nombre_comun": "Porrón pardo", "nombre_cientifico": "Aythya nyroca" },
+		{ "slug": "somormujo-lavanco", "nombre_comun": "Somormujo lavanco", "nombre_cientifico": "Podiceps cristatus" },
+		{ "slug": "tarabilla-nortena", "nombre_comun": "Tarabilla norteña", "nombre_cientifico": "Saxicola rubetra" },
+		{ "slug": "zampullin-cuellinegro", "nombre_comun": "Zampullín cuellinegro", "nombre_cientifico": "Podiceps nigricollis" },
+		{ "slug": "zarcero-bereber", "nombre_comun": "Zarcero bereber", "nombre_cientifico": "Iduna opaca" }
 	]
 }

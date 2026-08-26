@@ -138,17 +138,34 @@ done
 
 ## Estado del catálogo y próximo lote
 
-**Última actualización: 2026-06-26**. El catálogo tiene **141 fichas** publicadas, **todas al 6/6** (las 6 secciones canónicas completas, ver sección "Estructura y tono de una ficha"). eBird registra **~156 especies** en hotspots a ≤10 km del pueblo, así que quedan **~15 especies por importar** (un último lote).
+**Última actualización: 2026-08-26**. El catálogo tiene **158 fichas** publicadas, **todas al 6/6** (las 6 secciones canónicas completas, ver sección "Estructura y tono de una ficha"). **La importación por lotes está terminada**: eBird registra 158 especies en hotspots a ≤10 km y `faltantes:listar` devuelve solo 2, ambas excluidas por decisión editorial (ver más abajo). A partir de aquí el catálogo se amplía por goteo, cuando eBird registre especies nuevas en la zona.
+
+**Las dos especies excluidas a propósito** (si reaparecen en `faltantes:listar`, no son un error ni un mismatch taxonómico):
+
+| Especie | Motivo |
+|---|---|
+| Estornino rosado (*Pastor roseus*) | Divagante estepario con una sola cita; material local prácticamente nulo |
+| Pato criollo (*Cairina moschata*) | Pato doméstico neotropical; una cita en embalse es casi seguro un ejemplar suelto, no población asilvestrada |
+
+Criterio aplicado: sí se admiten exóticas **asilvestradas con población establecida o en expansión** (inseparable de Namibia, cotorra argentina, estrilda común), y no se admiten domésticos sueltos ni divagantes de cita única.
 
 **Lote 2026-06-26 (20 especies, → 141 fichas).** Importadas con el pipeline completo (`faltantes:listar` → seed → `fichas:generar` → `cantos:generar` → `fichas:enriquecer`) y redactadas a 6/6 con subagentes en paralelo (una ficha por agente, con el frontmatter ya auditado en el prompt). Especies: inseparable de Namibia (exótica asilvestrada), morito común, mosquitero musical, pato colorado, picogordo común, porrón europeo, reyezuelo sencillo, ánade friso, ánade rabudo, andarríos chico, ánsar común, avefría europea, calandria común, cetia ruiseñor, chotacabras europeo, collalba rubia occidental y las cuatro currucas carrasqueña/mirlona/rabilarga/tomillera. Correcciones manuales destacables: (1) **dimensiones del regex** muy flojas este lote — en limícolas/anátidas/chotacabras metía la longitud corporal en `envergadura_cm` dejando `tamano_cm:[0,0]` (andarríos, ánsar, cetia, chotacabras), y muchas fichas sin ninguna dimensión; se rellenaron todas a mano. (2) **Estacionalidades** mal clasificadas por la heurística (porrón/friso/avefría/reyezuelo/pato colorado "residente o ausente"→invernante, andarríos "residente"→invernante+paso, chotacabras "paso"→estival, collalba y currucas estivales "todo ausente"→estival, calandria→residente escaso marginal, morito/rabudo/ánsar→raro). (3) **UICN** corregido a mano: porrón europeo→VU, avefría→NT, curruca rabilarga→NT (el enriquecedor las dejó LC). (4) **Foto de museo**: el selector coló una bandeja de huevos disecados para la curruca mirlona (crédito "Museum Wiesbaden"); sustituida a mano por el P18 de Wikidata (Ron Knight, CC BY 2.0). (5) **Mismatch taxonómico de las currucas**: se sembraron con género `Sylvia` (convención del catálogo, lo prefiere Wikipedia ES) y así resolvieron GBIF/Wikipedia, pero **xeno-canto solo las indexa como `Curruca`** → los cantos se buscaron a mano con `gen:Curruca`. GBIF dio key=1 (raíz) para *Sylvia iberiae*: corregido a 10700636 (*Curruca iberiae*). Artículos Wikipedia ES: `Sylvia_hortensis/undata/conspicillata` existen; la carrasqueña va por nombre común (`Curruca_carrasqueña`).
 
+**Lote 2026-08-26 (17 especies, → 158 fichas). Último lote de la importación por lotes.** Pipeline completo y redacción a 6/6 sin subagentes. `faltantes:listar` devolvió 19 candidatas: se importaron 17 y se excluyeron 2 por criterio editorial (ver tabla de exclusiones arriba). Especies: curruca zarcera, estrilda común, garcilla cangrejera, garza imperial, gaviota patiamarilla, gorrión moruno, grulla común, lavandera boyera, martín pescador común, martinete común, mirlo capiblanco, mosquitero papialbo, porrón pardo, somormujo lavanco, tarabilla norteña, zampullín cuellinegro y zarcero bereber. Correcciones manuales destacables:
+
+1. **El enriquecedor rindió peor que nunca**: 1 tamaño de 17 (16 fichas con `tamano_cm:[0,0]`), 10 fichas sin hábitats detectables y 5 "envergaduras" que eran en realidad la longitud corporal (garza imperial 70-94→120-150, grulla 100-130→180-240, garcilla cangrejera 44-47→80-92, curruca zarcera 14→18-23). **Se reescribieron las 17 a mano.** Conclusión práctica: en anátidas, ardeidas, limícolas y grandes zancudas, dar por inservible la fase A y rellenar dimensiones a mano desde el principio.
+2. **Estacionalidad: 16 de 17 mal.** La heurística dejó la grulla con los doce meses en `ausente` (eBird no la muestreó) y puso `residente` todo el año a martinete, lavandera boyera, porrón pardo, gorrión moruno y somormujo. Correcciones: martinete y mosquitero papialbo→estival, lavandera boyera→estival+paso, grulla→paso oct-nov/feb-mar, tarabilla norteña y curruca zarcera→paso, mirlo capiblanco y zampullín cuellinegro→invernante, porrón pardo y gaviota patiamarilla→raro.
+3. **UICN**: porrón pardo `LC`→**`NT`** (el enriquecedor deja todo en LC por defecto; es la especie con peor estado del catálogo, En Peligro en España).
+4. **Fotos, dos sustituidas tras revisar las 17 a ojo.** El selector eligió para el martinete un archivo llamado literalmente `Young night heron.jpg` (juvenil en cautividad, retrato de cabeza, sin el patrón adulto diagnóstico) y para la tarabilla norteña una foto donde el ave ocupa ~3% del encuadre. **Lección: revisar visualmente las fotos de cada lote, no solo el crédito y la licencia** — `pickBestPhoto` puntúa por ratio y licencia, y no sabe si el ave es adulta, si está en un zoo o si es un punto lejano. También hubo que limpiar el crédito de la garcilla cangrejera, que traía incrustadas las coordenadas de geolocalización de Commons ("Camera location 43° 15′…").
+5. **Mismatch `Sylvia`/`Curruca` otra vez**, ahora con la curruca zarcera: sembrada como `Sylvia communis` (Wikipedia ES canoniza ahí y `Curruca_communis` redirige), pero xeno-canto solo la indexa como `Curruca` → canto buscado a mano con `gen:Curruca` (XC915721, el único registro español). Además `fichas:generar` la dejó **sin `ebird_code` ni `wikipedia_url`**, y sin `ebird_code` una especie reaparece como faltante en el siguiente `faltantes:listar`: rellenados a mano. Conviene comprobar siempre que las 3 fuentes estén presentes tras generar.
+
 **Repaso de unificación completado (2026-06-12).** Las 101 fichas existentes pasaron de un estado heterogéneo (con muchas a 0-4/6) a estar todas al 6/6 mediante 19 lotes de 5 fichas con revisión humana entre lotes. Aprovechando el rework se corrigieron también varios bugs estructurales: dimensiones inverosímiles en frontmatter (peso=130g del águila imperial, envergadura=38cm del alcaraván, envergadura=14cm del trepador-azul) y estacionalidades absurdas en estivales (saltos may→ausente→jun en vencejo-real, oct/sep=estival en papamoscas-gris). Cualquier ficha que se importe a partir de ahora debe cumplir el estándar 6/6 desde el principio.
 
-**Para arrancar el siguiente lote**, lanza:
+**Para comprobar si eBird ha registrado especies nuevas**, lanza:
 ```bash
 npm run faltantes:listar -- --top 20
 ```
-Te lista las 20 especies más frecuentes en hotspots locales que aún no están en el catálogo. Añade `--json` para sacar entries pegables directamente en `scripts/aves-iniciales.json`. Antes de pegar: filtra los falsos positivos por mismatch taxonómico (a 2026-06-07 la cabecera era *Curruca cabecinegra*, que se cubre como `Sylvia melanocephala`; ahora ya tiene `ebird_code: sarwar1` y no debería reaparecer).
+Te lista las especies presentes en hotspots locales que aún no están en el catálogo. Añade `--json` para sacar entries pegables directamente en `scripts/aves-iniciales.json`. Antes de pegar: descarta las dos exclusiones editoriales de la tabla anterior y filtra los falsos positivos por mismatch taxonómico (a 2026-06-07 la cabecera era *Curruca cabecinegra*, que se cubre como `Sylvia melanocephala`; ahora ya tiene `ebird_code: sarwar1` y no debería reaparecer).
 
 **Convención de tamaño de lote: ~20 especies por iteración**, no más. Importar en bloque mayor amplifica errores de regex/heurística y dificulta la revisión humana posterior. El usuario espera ver un resumen del enriquecimiento entre lotes antes de continuar.
 
@@ -183,6 +200,19 @@ especies:                      # opcional, solo si la entrada anuncia aves nueva
 - Página `/bitacora/` lista todas las entradas agrupadas por mes.
 - Portada (`src/pages/index.astro`) muestra dos bloques al final, debajo del CTA: "Últimas añadidas" (4 fotos de las últimas especies aparecidas en entradas con `especies`) y "Bitácora" (3 últimos micropost de cualquier tipo).
 - Entrada "Bitácora" en `src/components/Header.astro`, entre "Calendario" y "Sobre".
+
+**"Últimas añadidas" se alimenta solo de la bitácora**, vía `ultimasEspeciesUnicas(entradas, 4)`. Toma **las 4 primeras del array `especies`** de la entrada más reciente, no una selección por calidad: al escribir una entrada de importación, poner delante las especies más vistosas y con mejor foto, porque son las que acaban en portada.
+
+## Destacadas de portada (carrusel)
+
+El carrusel superior de la portada se alimenta de las fichas con `destacada: true` en el frontmatter, **ordenadas por el array `ORDEN_DESTACADAS` hardcodeado en `src/pages/index.astro`**. Son dos sitios que hay que tocar a la vez: si se marca una ficha como destacada y no se añade su slug al array, `indexOf` devuelve -1 y queda descolocada al principio.
+
+**Es una selección de temporada y hay que revisarla al cambiar de estación**, porque si no la portada acaba anunciando estivales en pleno invierno. Criterio: mezclar una o dos especies de reclamo (espectaculares, aunque sean escasas) con especies realmente abundantes en esos meses, para que quien venga al sitio pueda ver de verdad algo de lo que se le enseña.
+
+| Temporada | Selección |
+|---|---|
+| Hasta 2026-08 (verano) | abejaruco europeo, águila perdicera, oropéndola, buitre leonado, abubilla |
+| Desde 2026-08-26 (otoño-invierno) | grulla común, milano real, zorzal común, curruca capirotada, mirlo capiblanco |
 
 **Spec original:** [`docs/superpowers/specs/2026-06-12-bitacora-design.md`](docs/superpowers/specs/2026-06-12-bitacora-design.md).
 **Plan de implementación:** [`docs/superpowers/plans/2026-06-12-bitacora.md`](docs/superpowers/plans/2026-06-12-bitacora.md).

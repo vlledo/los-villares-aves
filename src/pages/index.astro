@@ -13,12 +13,13 @@ import {
 const aves = await getCollection('aves');
 const totalEspecies = aves.length;
 
+// Selección de temporada: se revisa al cambiar de estación (ahora, otoño-invierno).
 const ORDEN_DESTACADAS = [
-	'abejaruco-europeo',
-	'aguila-perdicera',
-	'oropendola-europea',
-	'buitre-leonado',
-	'abubilla',
+	'grulla-comun',
+	'milano-real',
+	'zorzal-comun',
+	'curruca-capirotada',
+	'mirlo-capiblanco',
 ];
 
 const destacadas = aves
