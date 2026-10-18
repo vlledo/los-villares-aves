@@ -132,3 +132,8 @@ export function validarKm([min, max]: [number, number], ruta: Punto[]): string |
 	}
 	return null;
 }
+
+/** Versión corta de un nombre de zona para etiquetar el mapa: hasta la primera coma o paréntesis. */
+export function etiquetaCorta(nombre: string): string {
+	return nombre.split(/[,(]/)[0].trim();
+}

@@ -1,6 +1,7 @@
 ---
 import { LOCATION } from '../consts';
 import type { Migrante } from '../utils/migraciones';
+import { etiquetaCorta, textoKm } from '../utils/migraciones-logica';
 import { MARCO, proyectar, trazo } from '../utils/migraciones-mapa';
 import { TIERRA_PATH } from '../utils/mapa-base.generated';
 
@@ -28,14 +29,14 @@ const etiquetaPunto = (p: { x: number; y: number }) =>
 		: { x: p.x + desplazamiento(p.x), y: p.y + 6, anchor: lado(p.x) };
 ---
 
-<div class="overflow-hidden rounded-xl border border-tierra-200 bg-[#e6eef2]">
+<div data-mapa-wrap class="relative scroll-mt-20 overflow-hidden rounded-xl border border-tierra-200 bg-[#e6eef2]">
 	<svg
 		data-mapa-migraciones
 		data-epoca="otono"
 		viewBox={`0 0 ${MARCO.ancho} ${MARCO.alto.toFixed(0)}`}
 		role="img"
 		aria-label="Mapa de Europa y África con las rutas migratorias de las aves que pasan por Los Villares. La lista de tarjetas inferior contiene la misma información en texto."
-		class="mx-auto block h-auto max-h-[85vh] w-full"
+		class="mx-auto block h-auto max-h-[70vh] min-h-[22rem] w-full"
 	>
 		<defs>
 			<marker
@@ -68,7 +69,7 @@ const etiquetaPunto = (p: { x: number; y: number }) =>
 									<g>
 										<circle cx={q.x} cy={q.y} r="8" class="punto"></circle>
 										<text x={e.x} y={e.y} text-anchor={e.anchor} class="etiqueta">
-											{p.nombre}
+											{etiquetaCorta(p.nombre)}
 										</text>
 									</g>
 								);
@@ -80,7 +81,7 @@ const etiquetaPunto = (p: { x: number; y: number }) =>
 								<g>
 									<circle cx={q.x} cy={q.y} r="7" class="escala"></circle>
 									<text x={et.x} y={et.y} text-anchor={et.anchor} class="etiqueta">
-										{e.nombre}
+										{etiquetaCorta(e.nombre)}
 									</text>
 								</g>
 							);
@@ -98,6 +99,30 @@ const etiquetaPunto = (p: { x: number; y: number }) =>
 			</text>
 		</g>
 	</svg>
+	{
+		migrantes.map(({ ave, migracion }) => {
+			const escalas = migracion.escalas ?? [];
+			return (
+				<div
+					data-tooltip
+					data-slug={ave.id}
+					hidden
+					role="status"
+					class="pointer-events-none absolute left-0 top-0 z-10 w-48 rounded-lg border border-tierra-200 bg-white p-2.5 text-xs text-tierra-700 sm:w-60 sm:p-3 sm:text-sm shadow-lg after:absolute after:left-[var(--caret-x)] after:top-full after:-mt-1.5 after:-ml-1.5 after:h-3 after:w-3 after:rotate-45 after:border-b after:border-r after:border-tierra-200 after:bg-white after:content-['']"
+				>
+					<p class="font-bold leading-tight text-tierra-900">{ave.data.nombre_comun}</p>
+					<p class="mt-1">
+						Recorre <span class="font-semibold text-olivo-700">{textoKm(migracion.km)}</span>
+					</p>
+					<p class="mt-1 text-[11px] text-tierra-600 sm:text-xs">
+						{escalas.length > 0
+							? `Paradas: ${escalas.map((e) => e.nombre).join(' · ')}`
+							: 'Sin paradas largas conocidas'}
+					</p>
+				</div>
+			);
+		})
+	}
 </div>
 
 <style>
@@ -177,7 +202,7 @@ const etiquetaPunto = (p: { x: number; y: number }) =>
 	}
 
 	.etiqueta {
-		font-size: 21px;
+		font-size: 18px;
 		font-family: system-ui, sans-serif;
 		font-weight: 600;
 		fill: #2f2316;
@@ -197,7 +222,7 @@ const etiquetaPunto = (p: { x: number; y: number }) =>
 		fill: #404e1f;
 	}
 	.etiqueta-villares {
-		font-size: 23px;
+		font-size: 20px;
 		font-family: system-ui, sans-serif;
 		font-weight: 700;
 		fill: #1c220f;
@@ -205,5 +230,18 @@ const etiquetaPunto = (p: { x: number; y: number }) =>
 		stroke: #faf7f1;
 		stroke-width: 5px;
 		stroke-linejoin: round;
+	}
+
+	/* En pantallas estrechas el mapa se reduce a ~1/3: se agrandan las etiquetas para que
+	   sigan midiendo unos 11 px. */
+	@media (max-width: 640px) {
+		.etiqueta {
+			font-size: 33px;
+			stroke-width: 8px;
+		}
+		.etiqueta-villares {
+			font-size: 35px;
+			stroke-width: 8px;
+		}
 	}
 </style>

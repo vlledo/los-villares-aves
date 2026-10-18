@@ -3,15 +3,17 @@
 import type { Punto } from './migraciones-logica.ts';
 
 const LNG_MIN = -25;
-const LNG_MAX = 60;
-const LAT_MIN = -36;
-const LAT_MAX = 72;
+const LNG_MAX = 75;
+const LAT_MIN = 0;
+const LAT_MAX = 66;
 const ANCHO = 1000;
 
-// Equirectangular con la latitud estirada como si el paralelo de referencia
-// fuera 25° N: compromiso entre no deformar Europa y no alargar demasiado el marco.
+// Equirectangular con el paralelo de referencia a 35° N (el centro de Europa y el
+// Sáhara), de modo que la forma de las costas no se deforma. El marco va del ecuador
+// a 66° N y del Atlántico a Rusia occidental para que quede apaisado y el mapa pueda
+// ocupar todo el ancho de la página sin empujar las tarjetas.
 const GRADO_X = ANCHO / (LNG_MAX - LNG_MIN);
-const GRADO_Y = GRADO_X / Math.cos((25 * Math.PI) / 180);
+const GRADO_Y = GRADO_X / Math.cos((35 * Math.PI) / 180);
 
 export const MARCO = {
 	lngMin: LNG_MIN,

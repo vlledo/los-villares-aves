@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import {
 	coincideGrupo,
 	epocaPorMes,
+	etiquetaCorta,
 	kmGranCirculo,
 	puntosRuta,
 	sentido,
@@ -148,4 +149,17 @@ test('validarKm acepta un rango compatible con la distancia de la ruta', () => {
 
 test('validarKm rechaza un máximo desmedido y nombra el máximo', () => {
 	assert.match(validarKm([6000, 30000], [norteEuropa, africaOccidental]) ?? '', /máximo/);
+});
+
+test('etiquetaCorta corta en la primera coma', () => {
+	assert.equal(etiquetaCorta('Escandinavia, Finlandia y norte de Alemania'), 'Escandinavia');
+	assert.equal(etiquetaCorta('África occidental, de Senegal a Costa de Marfil'), 'África occidental');
+});
+
+test('etiquetaCorta quita el paréntesis final', () => {
+	assert.equal(etiquetaCorta('Lago del Der (Francia)'), 'Lago del Der');
+});
+
+test('etiquetaCorta deja intacto un nombre sin coma ni paréntesis', () => {
+	assert.equal(etiquetaCorta('Sahel occidental'), 'Sahel occidental');
 });

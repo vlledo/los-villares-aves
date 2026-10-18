@@ -70,3 +70,14 @@ test('trazo con arco sigue pasando por el punto central y sus extremos', () => {
 	assert.ok(Math.abs(n[6] - pb.x) < 0.1 && Math.abs(n[7] - pb.y) < 0.1);
 	assert.ok(Math.abs(n[n.length - 2] - pc.x) < 0.1 && Math.abs(n[n.length - 1] - pc.y) < 0.1);
 });
+
+test('el marco es apaisado: el mapa a todo el ancho no empuja las tarjetas', () => {
+	assert.ok(MARCO.alto / MARCO.ancho < 0.85, `proporción alto/ancho = ${MARCO.alto / MARCO.ancho}`);
+});
+
+test('el marco contiene todas las zonas de las rutas piloto, con margen', () => {
+	// Extremos reales de los datos: Escandinavia/Finlandia (63° N), selvas del Congo (2° N).
+	assert.ok(dentroDelMarco({ lat: 63, lng: 18 }));
+	assert.ok(dentroDelMarco({ lat: 2, lng: 18 }));
+	assert.ok(proyectar(2, 18).y < MARCO.alto - 15, 'la zona del Congo queda pegada al borde inferior');
+});

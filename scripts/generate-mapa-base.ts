@@ -1,5 +1,5 @@
 // Genera src/utils/mapa-base.generated.ts: siluetas de tierra firme de Natural Earth
-// (dominio público, 50m), recortadas al marco, proyectadas y simplificadas.
+// (dominio público, 50m), recortadas a un área ampliada alrededor del marco, proyectadas y simplificadas.
 // Uso: npm run mapa:generar
 import { writeFileSync } from 'node:fs';
 import { MARCO, proyectar } from '../src/utils/migraciones-mapa.ts';
@@ -7,7 +7,14 @@ import { MARCO, proyectar } from '../src/utils/migraciones-mapa.ts';
 const URL_TIERRA =
 	'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_land.geojson';
 const SALIDA = new URL('../src/utils/mapa-base.generated.ts', import.meta.url);
-const DISTANCIA_MINIMA_PX = 0.6;
+const DISTANCIA_MINIMA_PX = 0.8;
+// Fuera del marco solo se rellena el fondo: no hace falta detalle de costa.
+const DISTANCIA_MINIMA_FUERA_PX = 5;
+
+// La tierra se recorta a un área mayor que el marco: si el mapa se muestra con bandas
+// laterales o superiores (límite de altura, pantallas estrechas), la costa sigue en
+// vez de cortarse en seco en el borde del marco.
+const MARGEN = { lng: 60, latSur: 20, latNorte: 14 };
 
 type Par = [number, number]; // [lng, lat]
 type Anillo = Par[];
@@ -29,7 +36,10 @@ function recortar(anillo: Anillo, dentro: (p: Par) => boolean, corte: (a: Par, b
 }
 
 function recortarAlMarco(anillo: Anillo): Anillo {
-	const { lngMin, lngMax, latMin, latMax } = MARCO;
+	const lngMin = MARCO.lngMin - MARGEN.lng;
+	const lngMax = MARCO.lngMax + MARGEN.lng;
+	const latMin = MARCO.latMin - MARGEN.latSur;
+	const latMax = MARCO.latMax + MARGEN.latNorte;
 	const enLng = (lng: number) => (a: Par, b: Par): Par => {
 		const t = (lng - a[0]) / (b[0] - a[0]);
 		return [lng, a[1] + t * (b[1] - a[1])];
@@ -51,7 +61,9 @@ function anilloAPath(anillo: Anillo): string {
 	for (const [lng, lat] of anillo) {
 		const p = proyectar(lat, lng);
 		const ult = puntos[puntos.length - 1];
-		if (!ult || Math.hypot(p.x - ult.x, p.y - ult.y) >= DISTANCIA_MINIMA_PX) puntos.push(p);
+		const dentro = p.x >= 0 && p.x <= MARCO.ancho && p.y >= 0 && p.y <= MARCO.alto;
+		const minimo = dentro ? DISTANCIA_MINIMA_PX : DISTANCIA_MINIMA_FUERA_PX;
+		if (!ult || Math.hypot(p.x - ult.x, p.y - ult.y) >= minimo) puntos.push(p);
 	}
 	if (puntos.length < 3) return '';
 	return `M${puntos.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join('L')}Z`;

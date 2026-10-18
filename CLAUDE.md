@@ -235,7 +235,8 @@ migracion:
 
 **Código:**
 - Lógica pura (sin imports de Astro, probada en `tests/`): `src/utils/migraciones-logica.ts` (tipos, validación, `puntosRuta`, textos, `coincideGrupo`) y `src/utils/migraciones-mapa.ts` (`MARCO`, `proyectar`, `trazo` con arcos). Cargador con `astro:content`: `src/utils/migraciones.ts` (`obtenerMigrantes`).
-- Mapa base: `src/utils/mapa-base.generated.ts`, generado con `npm run mapa:generar` (no editar a mano). Si se cambia el marco o la proyección, regenerarlo.
+- Mapa base: `src/utils/mapa-base.generated.ts`, generado con `npm run mapa:generar` (no editar a mano). Si se cambia el marco o la proyección, regenerarlo. La tierra se recorta a un área mayor que el marco (con poco detalle fuera de él) para que, si el mapa se muestra con bandas por el límite de altura, la costa no se corte en seco. El marco es apaisado (lng -25…75, lat 0…66) para que el mapa a todo el ancho no empuje las tarjetas.
+- Maquetación de la página: filtros (mismas pills que `/aves`) → mapa a todo el ancho (`max-h-[70vh]`) → leyenda → tarjetas. Al seleccionar una ruta, un tooltip HTML (`[data-tooltip]`) con nombre, km y paradas se ancla al punto medio del trazo (`getPointAtLength` + `getScreenCTM`). Las etiquetas del mapa usan `etiquetaCorta()` (hasta la primera coma o paréntesis); el nombre completo va en tarjeta y tooltip. Las tarjetas ocupan 6 filas de la rejilla con `grid-rows-subgrid`, de modo que meses, "Cómo viaja" y botones quedan a la misma altura en cada fila.
 - UI: `src/pages/migraciones.astro`, `MapaMigraciones.astro`, `TarjetaMigracion.astro` y script vanilla `src/scripts/migraciones.ts` (mismo patrón que `filtros-catalogo.ts`: `aria-pressed` + atributo `hidden`). **Los elementos SVG no tienen la propiedad `hidden`: usar `toggleAttribute('hidden')`.**
 - Dirección: en primavera de `zona_invernada` a `zona_cria`; en otoño al revés. En los de paso se inserta Los Villares como punto intermedio de la ruta.
 

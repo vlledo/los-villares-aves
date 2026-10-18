@@ -27,12 +27,38 @@ export function initMigraciones(): void {
 	const mapa = document.querySelector<SVGSVGElement>('[data-mapa-migraciones]');
 	if (!raiz || !mapa) return;
 
+	const wrap = document.querySelector<HTMLElement>('[data-mapa-wrap]');
+	const tooltips = Array.from(document.querySelectorAll<HTMLElement>('[data-tooltip]'));
 	const tarjetas = Array.from(document.querySelectorAll<HTMLElement>('[data-tarjeta-migracion]'));
 	const rutas = Array.from(mapa.querySelectorAll<SVGGElement>('[data-ruta]'));
 	const botonesGrupo = Array.from(raiz.querySelectorAll<HTMLElement>('[data-filtro-grupo]'));
 	const botonesEpoca = Array.from(raiz.querySelectorAll<HTMLElement>('[data-filtro-epoca]'));
 	const ayuda = raiz.querySelector<HTMLElement>('[data-ayuda]');
 	const contador = document.querySelector<HTMLElement>('[data-contador]');
+
+	/** Muestra el tooltip de la ruta seleccionada anclado en el punto medio de su trazo. */
+	function colocarTooltip(slug: string | null): void {
+		tooltips.forEach((t) => {
+			t.hidden = t.dataset.slug !== slug;
+		});
+		if (!slug || !wrap) return;
+		const tip = tooltips.find((t) => t.dataset.slug === slug);
+		const linea = mapa!.querySelector<SVGPathElement>(`[data-ruta][data-slug="${slug}"] .linea`);
+		const ctm = mapa!.getScreenCTM();
+		if (!tip || !linea || !ctm) {
+			if (tip) tip.hidden = true;
+			return;
+		}
+		const medio = linea.getPointAtLength(linea.getTotalLength() / 2);
+		const punto = new DOMPoint(medio.x, medio.y).matrixTransform(ctm);
+		const caja = wrap.getBoundingClientRect();
+		const px = punto.x - caja.left;
+		const py = punto.y - caja.top;
+		const x = Math.min(Math.max(px - tip.offsetWidth / 2, 8), caja.width - tip.offsetWidth - 8);
+		const y = Math.max(py - tip.offsetHeight - 14, 8);
+		tip.style.transform = `translate(${x}px, ${y}px)`;
+		tip.style.setProperty('--caret-x', `${px - x}px`);
+	}
 
 	const estado: Estado = {
 		grupo: 'todas',
@@ -76,18 +102,22 @@ export function initMigraciones(): void {
 			t.toggleAttribute('data-seleccionada', activa);
 			t.querySelector('[data-ver-en-mapa]')?.setAttribute('aria-pressed', String(activa));
 		});
+		colocarTooltip(estado.seleccion);
 	}
 
 	function seleccionar(slug: string): void {
 		const deseleccionar = estado.seleccion === slug;
 		estado.seleccion = deseleccionar ? null : slug;
 		pintar();
-		// En pantallas sin columna lateral el mapa queda arriba: se lleva a la vista.
-		if (!deseleccionar && !window.matchMedia('(min-width: 1024px)').matches) {
-			mapa!.scrollIntoView({
-				behavior: prefiereMenosMovimiento() ? 'auto' : 'smooth',
-				block: 'start',
-			});
+		// El mapa queda encima de las tarjetas: si no se ve entero, se lleva a la vista.
+		if (!deseleccionar && wrap) {
+			const caja = wrap.getBoundingClientRect();
+			if (caja.top < 64 || caja.bottom > window.innerHeight) {
+				wrap.scrollIntoView({
+					behavior: prefiereMenosMovimiento() ? 'auto' : 'smooth',
+					block: 'start',
+				});
+			}
 		}
 	}
 
@@ -117,6 +147,7 @@ export function initMigraciones(): void {
 			pintar();
 		}
 	});
+	window.addEventListener('resize', () => colocarTooltip(estado.seleccion));
 	document.addEventListener('keydown', (e) => {
 		if (e.key === 'Escape' && estado.seleccion) {
 			estado.seleccion = null;
