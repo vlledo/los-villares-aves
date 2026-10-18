@@ -21,11 +21,13 @@ npm run fichas:generar     # Crea fichas autogeneradas (foto + frontmatter base 
 npm run cantos:generar     # Embebe audio de xeno-canto para fichas que no lo tengan
 npm run fichas:enriquecer  # Rellena tamano/envergadura/peso (Wikipedia) + estacionalidad (eBird) + hábitats + abundancia
 npm run og:generar         # Regenera public/og.png a partir de SVG inline
+npm run mapa:generar       # Regenera src/utils/mapa-base.generated.ts (siluetas Natural Earth del mapa de Migraciones)
+npm test                   # node --test sobre tests/ (lógica pura de Migraciones)
 ```
 
 `faltantes:listar` admite `--top N` (default 30) y `--json` (output pegable en `scripts/aves-iniciales.json`). Ejemplo de flujo: `npm run faltantes:listar -- --top 20 --json`.
 
-No hay test suite ni linter — `astro check` / `tsc --noEmit` son la verificación de tipos disponible. La verificación funcional real es `npm run build` (Zod valida cada `.mdx` durante el build).
+No hay linter — `astro check` / `tsc --noEmit` son la verificación de tipos disponible. Solo hay tests (`npm test`, `node:test` sin dependencias) para la lógica pura de Migraciones; la verificación funcional real es `npm run build` (Zod valida cada `.mdx` durante el build) más revisión visual.
 
 Para probar el selector de fotos sobre una especie concreta sin tocar el catálogo:
 ```bash
@@ -199,9 +201,47 @@ especies:                      # opcional, solo si la entrada anuncia aves nueva
 **Dónde se ve:**
 - Página `/bitacora/` lista todas las entradas agrupadas por mes.
 - Portada (`src/pages/index.astro`) muestra dos bloques al final, debajo del CTA: "Últimas añadidas" (4 fotos de las últimas especies aparecidas en entradas con `especies`) y "Bitácora" (3 últimos micropost de cualquier tipo).
-- Entrada "Bitácora" en `src/components/Header.astro`, entre "Calendario" y "Sobre".
+- Entrada "Bitácora" en `src/components/Header.astro`, entre "Migraciones" y "Sobre" (orden: Inicio, Aves, Calendario, Migraciones, Bitácora, Sobre).
 
 **"Últimas añadidas" se alimenta solo de la bitácora**, vía `ultimasEspeciesUnicas(entradas, 4)`. Toma **las 4 primeras del array `especies`** de la entrada más reciente, no una selección por calidad: al escribir una entrada de importación, poner delante las especies más vistosas y con mejor foto, porque son las que acaban en portada.
+
+## Migraciones
+
+Página `/migraciones/` (entrada del menú tras "Calendario") con un mapa de Europa y África y tarjetas de las aves del catálogo que hacen **grandes movimientos**: estivales, invernantes y de paso. Quedan fuera los movimientos parciales (residentes con refuerzo invernal, desplazamientos altitudinales) y la estacionalidad `raro`. **Spec y plan:** `docs/superpowers/specs/2026-10-18-migraciones-design.md` y `docs/superpowers/plans/2026-10-18-migraciones-iteracion-1.md` (no versionados: el `~/.gitignore` del usuario ignora `superpowers/`).
+
+**Datos: campo opcional `migracion` en el frontmatter de cada ficha** (schema en `src/content.config.ts`). Una ficha sin él no aparece en la sección.
+
+```yaml
+migracion:
+  grupo: estival                     # estival | invernante | paso
+  zona_cria:      { nombre: "Los Villares y Sierra Sur de Jaén", lat: 37.78, lng: -3.83 }
+  zona_invernada: { nombre: "África occidental, de Senegal a Costa de Marfil", lat: 10, lng: -6 }
+  km: [3500, 5000]                   # un solo sentido, de zona de cría a zona de invernada
+  primavera: { desde: abr, hasta: may }   # lo que ocurre EN Los Villares: llegada (estival), salida (invernante) o paso
+  otono:     { desde: ago, hasta: sep }
+  viaje: directo                     # directo | con_escalas
+  escalas:                           # opcional; solo paradas largas documentadas
+    - { nombre: "...", lat: 0, lng: 0, nota: "..." }
+  nota: >                            # opcional, prosa limpia sin Markdown
+  fuente: "SEO/BirdLife"             # opcional, por nombre, solo si se ha verificado
+```
+
+**Reglas de redacción:**
+- `viaje: directo` significa **"sin paradas largas documentadas"** (la tarjeta dice "Sin paradas largas conocidas"), no que el ave vuele de un tirón. `con_escalas` solo con paradas documentadas. Los cuellos de botella (Estrecho de Gibraltar) van en `nota`, no en `escalas`.
+- `km` siempre en rango y aproximado. `fuente` solo si se ha comprobado; sin fuente verificada, se omite y se dice en la revisión.
+- `primavera`/`otono` deben ser coherentes con la `estacionalidad` mensual de la propia ficha (la mini línea de la tarjeta sale de ahí).
+- Los datos se redactan a mano investigando en la web, y **se revisan con el usuario en una tabla (especie, ruta, km, fechas, escalas, fuente) antes de commitear**. Nada de regex.
+- El grupo debe tener respaldo en la estacionalidad (estival ⇒ algún mes `estival`, etc.): `obtenerMigrantes()` rompe el build si no, y también si algún punto cae fuera del marco del mapa (lng -25…60, lat -36…72).
+
+**Código:**
+- Lógica pura (sin imports de Astro, probada en `tests/`): `src/utils/migraciones-logica.ts` (tipos, validación, `puntosRuta`, textos, `coincideGrupo`) y `src/utils/migraciones-mapa.ts` (`MARCO`, `proyectar`, `trazo` con arcos). Cargador con `astro:content`: `src/utils/migraciones.ts` (`obtenerMigrantes`).
+- Mapa base: `src/utils/mapa-base.generated.ts`, generado con `npm run mapa:generar` (no editar a mano). Si se cambia el marco o la proyección, regenerarlo.
+- UI: `src/pages/migraciones.astro`, `MapaMigraciones.astro`, `TarjetaMigracion.astro` y script vanilla `src/scripts/migraciones.ts` (mismo patrón que `filtros-catalogo.ts`: `aria-pressed` + atributo `hidden`). **Los elementos SVG no tienen la propiedad `hidden`: usar `toggleAttribute('hidden')`.**
+- Dirección: en primavera de `zona_invernada` a `zona_cria`; en otoño al revés. En los de paso se inserta Los Villares como punto intermedio de la ruta.
+
+**Bitácora de Migraciones:** una entrada por hito (estreno, cada lote, cierre), **sin `especies:`** en el frontmatter (ese campo alimenta "Últimas añadidas" de portada, que es solo para fichas nuevas); las especies se enlazan en el cuerpo. Nombre `YYYY-MM-DD-migraciones-<breve>.mdx`.
+
+**Estado:** iteración 1 hecha (2026-10-18): 10 especies piloto (abejaruco, golondrina común, oropéndola, milano negro, zorzal alirrojo, milano real, estornino pinto, grulla, papamoscas cerrojillo, abejero). Iteración 2: lotes de ~15-20 especies por grupo ecológico hasta unas 50-55, con revisión entre lotes. Iteración 3: pulido (rendimiento, móvil, fuentes, enlace "Ver su migración" desde las fichas).
 
 ## Destacadas de portada (carrusel)
 
