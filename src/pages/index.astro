@@ -13,17 +13,14 @@ import {
 const aves = await getCollection('aves');
 const totalEspecies = aves.length;
 
-// Selección de temporada: se revisa al cambiar de estación (ahora, otoño-invierno,
-// con las invernantes que llegan en octubre).
+// Selección de temporada: se revisa al cambiar de estación (ahora, otoño, con
+// las invernantes recién llegadas).
 const ORDEN_DESTACADAS = [
-	'grulla-comun',
+	'avefria-europea',
 	'estornino-pinto',
-	'milano-real',
 	'zorzal-alirrojo',
-	'zorzal-comun',
+	'mosquitero-comun',
 	'cormoran-grande',
-	'curruca-capirotada',
-	'mirlo-capiblanco',
 ];
 
 const destacadas = aves

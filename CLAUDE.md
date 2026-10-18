@@ -254,7 +254,7 @@ El carrusel superior de la portada se alimenta de las fichas con `destacada: tru
 |---|---|
 | Hasta 2026-08 (verano) | abejaruco europeo, águila perdicera, oropéndola, buitre leonado, abubilla |
 | 2026-08-26 → 2026-10-18 (otoño-invierno) | grulla común, milano real, zorzal común, curruca capirotada, mirlo capiblanco |
-| Desde 2026-10-18 (otoño, con las invernantes recién llegadas) | grulla común, estornino pinto, milano real, zorzal alirrojo, zorzal común, cormorán grande, curruca capirotada, mirlo capiblanco |
+| Desde 2026-10-18 (otoño, solo invernantes recién llegadas) | avefría europea, estornino pinto, zorzal alirrojo, mosquitero común, cormorán grande |
 
 **Spec original:** [`docs/superpowers/specs/2026-06-12-bitacora-design.md`](docs/superpowers/specs/2026-06-12-bitacora-design.md).
 **Plan de implementación:** [`docs/superpowers/plans/2026-06-12-bitacora.md`](docs/superpowers/plans/2026-06-12-bitacora.md).
