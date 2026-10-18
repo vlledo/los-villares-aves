@@ -99,3 +99,36 @@ export function epocaPorMes(mes0: number): Epoca {
 export function coincideGrupo(filtro: 'todas' | Grupo, grupo: Grupo): boolean {
 	return filtro === 'todas' || filtro === grupo;
 }
+
+const RADIO_TIERRA_KM = 6371;
+const rad = (grados: number): number => (grados * Math.PI) / 180;
+
+/** Longitud de la ruta como suma de tramos en línea recta sobre la esfera (haversine). */
+export function kmGranCirculo(ruta: Punto[]): number {
+	let total = 0;
+	for (let i = 1; i < ruta.length; i++) {
+		const a = ruta[i - 1];
+		const b = ruta[i];
+		const h =
+			Math.sin(rad(b.lat - a.lat) / 2) ** 2 +
+			Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lng - a.lng) / 2) ** 2;
+		total += 2 * RADIO_TIERRA_KM * Math.asin(Math.sqrt(h));
+	}
+	return total;
+}
+
+/**
+ * `null` si el rango de km es compatible con la geometría de la ruta; si no, el motivo.
+ * Un ave no recorre menos que la línea recta (con un 15 % de margen por redondeo de
+ * coordenadas) ni, razonablemente, más del triple.
+ */
+export function validarKm([min, max]: [number, number], ruta: Punto[]): string | null {
+	const recta = Math.round(kmGranCirculo(ruta));
+	if (min < recta * 0.85) {
+		return `km mínimo (${min}) menor que la distancia en línea recta de la ruta (≈ ${recta} km)`;
+	}
+	if (max > recta * 3) {
+		return `km máximo (${max}) desmedido frente a la distancia en línea recta de la ruta (≈ ${recta} km)`;
+	}
+	return null;
+}

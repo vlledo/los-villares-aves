@@ -1,6 +1,6 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import { LOCATION } from '../consts';
-import { type Migracion, type Punto, puntosRuta, validarGrupo } from './migraciones-logica';
+import { type Migracion, type Punto, puntosRuta, validarGrupo, validarKm } from './migraciones-logica';
 import { dentroDelMarco } from './migraciones-mapa';
 
 export interface Migrante {
@@ -30,6 +30,10 @@ export async function obtenerMigrantes(): Promise<Migrante[]> {
 			if (motivo) throw new Error(`aves/${ave.id}.mdx: ${motivo}`);
 
 			const ruta = puntosRuta(migracion, VILLARES);
+
+			const motivoKm = validarKm(migracion.km, ruta);
+			if (motivoKm) throw new Error(`aves/${ave.id}.mdx: ${motivoKm}`);
+
 			for (const punto of ruta) {
 				if (!dentroDelMarco(punto)) {
 					throw new Error(`aves/${ave.id}.mdx: punto "${punto.nombre}" fuera del marco del mapa`);

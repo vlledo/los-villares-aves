@@ -140,7 +140,7 @@ done
 
 ## Estado del catálogo y próximo lote
 
-**Última actualización: 2026-08-26**. El catálogo tiene **158 fichas** publicadas, **todas al 6/6** (las 6 secciones canónicas completas, ver sección "Estructura y tono de una ficha"). **La importación por lotes está terminada**: eBird registra 158 especies en hotspots a ≤10 km y `faltantes:listar` devuelve solo 2, ambas excluidas por decisión editorial (ver más abajo). A partir de aquí el catálogo se amplía por goteo, cuando eBird registre especies nuevas en la zona.
+**Última actualización del catálogo: 2026-08-26** (sección Migraciones: ver más abajo, iteración 1 el 2026-10-18). El catálogo tiene **158 fichas** publicadas, **todas al 6/6** (las 6 secciones canónicas completas, ver sección "Estructura y tono de una ficha"). **La importación por lotes está terminada**: eBird registra 158 especies en hotspots a ≤10 km y `faltantes:listar` devuelve solo 2, ambas excluidas por decisión editorial (ver más abajo). A partir de aquí el catálogo se amplía por goteo, cuando eBird registre especies nuevas en la zona.
 
 **Las dos especies excluidas a propósito** (si reaparecen en `faltantes:listar`, no son un error ni un mismatch taxonómico):
 
@@ -231,7 +231,7 @@ migracion:
 - `km` siempre en rango y aproximado. `fuente` solo si se ha comprobado; sin fuente verificada, se omite y se dice en la revisión.
 - `primavera`/`otono` deben ser coherentes con la `estacionalidad` mensual de la propia ficha (la mini línea de la tarjeta sale de ahí).
 - Los datos se redactan a mano investigando en la web, y **se revisan con el usuario en una tabla (especie, ruta, km, fechas, escalas, fuente) antes de commitear**. Nada de regex.
-- El grupo debe tener respaldo en la estacionalidad (estival ⇒ algún mes `estival`, etc.): `obtenerMigrantes()` rompe el build si no, y también si algún punto cae fuera del marco del mapa (lng -25…60, lat -36…72).
+- El grupo debe tener respaldo en la estacionalidad (estival ⇒ algún mes `estival`, etc.): `obtenerMigrantes()` rompe el build si no, si algún punto cae fuera del marco del mapa (ver `MARCO` en `migraciones-mapa.ts`) y si `km` no es coherente con la ruta (`validarKm`: el mínimo no puede ser menor que el 85 % de la distancia en línea recta de la ruta, ni el máximo mayor que el triple). Si salta, corregir los km o los extremos, no la regla.
 
 **Código:**
 - Lógica pura (sin imports de Astro, probada en `tests/`): `src/utils/migraciones-logica.ts` (tipos, validación, `puntosRuta`, textos, `coincideGrupo`) y `src/utils/migraciones-mapa.ts` (`MARCO`, `proyectar`, `trazo` con arcos). Cargador con `astro:content`: `src/utils/migraciones.ts` (`obtenerMigrantes`).

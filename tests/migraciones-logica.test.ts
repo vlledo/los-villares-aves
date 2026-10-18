@@ -3,11 +3,13 @@ import { test } from 'node:test';
 import {
 	coincideGrupo,
 	epocaPorMes,
+	kmGranCirculo,
 	puntosRuta,
 	sentido,
 	textoKm,
 	textoRango,
 	validarGrupo,
+	validarKm,
 	type Migracion,
 	type MesClave,
 	type Punto,
@@ -126,4 +128,24 @@ test('coincideGrupo: un grupo concreto solo admite el suyo', () => {
 	assert.equal(coincideGrupo('estival', 'estival'), true);
 	assert.equal(coincideGrupo('estival', 'paso'), false);
 	assert.equal(coincideGrupo('invernante', 'estival'), false);
+});
+
+const africaOccidental: Punto = { nombre: 'África occidental', lat: 8, lng: -3 };
+const norteEuropa: Punto = { nombre: 'Escandinavia', lat: 61, lng: 15 };
+
+test('kmGranCirculo suma la distancia en línea recta de cada tramo', () => {
+	const km = kmGranCirculo([villares, { nombre: 'Sahel', lat: 14, lng: -8 }]);
+	assert.ok(km > 2650 && km < 2700, `fuera de rango: ${km}`);
+});
+
+test('validarKm rechaza un mínimo menor que la distancia en línea recta y nombra el mínimo', () => {
+	assert.match(validarKm([5000, 9000], [norteEuropa, africaOccidental]) ?? '', /mínimo/);
+});
+
+test('validarKm acepta un rango compatible con la distancia de la ruta', () => {
+	assert.equal(validarKm([6000, 7500], [norteEuropa, africaOccidental]), null);
+});
+
+test('validarKm rechaza un máximo desmedido y nombra el máximo', () => {
+	assert.match(validarKm([6000, 30000], [norteEuropa, africaOccidental]) ?? '', /máximo/);
 });
