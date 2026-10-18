@@ -242,7 +242,22 @@ migracion:
 
 **Bitácora de Migraciones:** una entrada por hito (estreno, cada lote, cierre), **sin `especies:`** en el frontmatter (ese campo alimenta "Últimas añadidas" de portada, que es solo para fichas nuevas); las especies se enlazan en el cuerpo. Nombre `YYYY-MM-DD-migraciones-<breve>.mdx`.
 
-**Estado:** iteración 1 hecha (2026-10-18): 10 especies piloto (abejaruco, golondrina común, oropéndola, milano negro, zorzal alirrojo, milano real, estornino pinto, grulla, papamoscas cerrojillo, abejero). Iteración 2: lotes de ~15-20 especies por grupo ecológico hasta unas 50-55, con revisión entre lotes. Iteración 3: pulido (rendimiento, móvil, fuentes, enlace "Ver su migración" desde las fichas).
+**Estado (2026-10-18):** iteración 1 hecha, mergeada en `main` y subida (`5dec66f`): 10 especies piloto (abejaruco, golondrina común, oropéndola, milano negro, zorzal alirrojo, milano real, estornino pinto, grulla, papamoscas cerrojillo, abejero). Quedan las iteraciones 2 y 3.
+
+**Siguiente: iteración 2 (lotes hasta ~50-55 especies).**
+1. **Antes de empezar**, validar las coordenadas de Los Villares: hoy se copian a mano en cada ficha (`zona_cria` de los estivales, `zona_invernada` de los invernantes) y `MapaMigraciones.astro` las reconoce por igualdad exacta con `LOCATION`. Un error de tecleo pintaría un punto y una etiqueta duplicados sin romper el build. Comprobarlo en `obtenerMigrantes()` (error si no coinciden con `LOCATION`) o rellenarlas desde `LOCATION`.
+2. **Fijar la lista final** partiendo de las candidatas de abajo: descartar movimientos parciales y decidir los dudosos uno a uno anotando el criterio (abubilla, curruca capirotada, codorniz, zorzal común, mirlo capiblanco…). La estacionalidad `raro` (11 fichas) queda fuera.
+3. **Lotes de ~15-20 especies por grupo ecológico** (rapaces; vencejos, golondrinas y aviones; paseriformes insectívoros y currucas; acuáticas, limícolas y zancudas; resto). Por lote: investigar en la web, redactar el bloque `migracion` (ver reglas de redacción), **mostrar al usuario la tabla de revisión (especie, ruta, km, fechas, escalas, fuente) y esperar su visto bueno antes de commitear**, una entrada de bitácora sin `especies:` y actualizar este estado. Si `validarKm` o la validación de grupo rompen el build, corregir los datos, no la regla.
+
+**Candidatas de partida (2026-10-18, sin los 10 pilotos; revalidar contra el catálogo):**
+- *Estivales (36):* abubilla, águila calzada, águila culebrera, aguilucho cenizo, aguilucho lagunero, alcaudón común, autillo europeo, avión común, carricero común, cernícalo primilla, chorlitejo chico, chotacabras cuellirrojo, chotacabras europeo, cigüeñuela común, codorniz común, collalba gris, collalba rubia occidental, críalo europeo, cuco común, curruca carrasqueña occidental, curruca mirlona occidental, curruca tomillera, garcilla cangrejera, garza imperial, golondrina dáurica, lavandera boyera, martinete común, mosquitero papialbo, papamoscas gris, ruiseñor común, tórtola europea, vencejo común, vencejo pálido, vencejo real, zarcero bereber, zarcero políglota.
+- *Invernantes (15):* ánade friso, andarríos chico, andarríos grande, avefría europea, bisbita pratense, cormorán grande, curruca capirotada, gaviota reidora, mirlo capiblanco, mosquitero común, pato colorado, porrón europeo, reyezuelo sencillo, zampullín cuellinegro, zorzal común.
+- *Solo de paso (5):* avión zapador, curruca zarcera, gaviota sombría, mosquitero musical, tarabilla norteña.
+- Para regenerar la lista: fichas con algún mes `estival`/`invernante`/`paso` en `estacionalidad` y sin bloque `migracion`.
+
+**Iteración 3 (pulido):** enlace «Ver su migración» desde las fichas hacia su tarjeta; rendimiento (el mapa base va inline, ~64 KB gzip la página); revisión general de datos y entrada de bitácora de cierre. Pendientes menores aplazados de la revisión final, a recoger aquí: controles de filtro inertes sin JavaScript (ocultarlos y mostrarlos desde el script); `sentido()` sin uso en producción; colores del trazo del mapa distintos de `PRESENCIA_COLOR`; contador «1 especies» sin plural; marcador de flecha con `context-stroke` (soporte desigual, solo afecta a `prefers-reduced-motion`); test que compare la cabecera de `mapa-base.generated.ts` con `MARCO`.
+
+**Datos de los pilotos por revisar (iteración 3):** sin fuente verificada quedan abejaruco, golondrina, oropéndola, zorzal alirrojo y abejero (conocimiento general, rangos de km por geometría); el lago del Der como parada de la grulla y la escala «Península Ibérica» del papamoscas (vaga) vienen de memoria; la invernada del abejero (2° N, 18° E) quizá esté demasiado al este.
 
 ## Destacadas de portada (carrusel)
 
