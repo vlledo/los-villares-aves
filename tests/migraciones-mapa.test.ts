@@ -50,3 +50,23 @@ test('trazo de tres puntos pasa exactamente por el punto central', () => {
 	assert.ok(Math.abs(n[6] - medio.x) < 0.1);
 	assert.ok(Math.abs(n[7] - medio.y) < 0.1);
 });
+
+test('trazo de dos puntos describe un arco, no una recta', () => {
+	const a = { nombre: 'A', lat: 62, lng: 15 };
+	const b = { nombre: 'B', lat: 13, lng: -8 };
+	const [x0, y0, c1x, c1y, , , x1, y1] = numeros(trazo([a, b]));
+	// Producto vectorial de (c1 - p0) y (p1 - p0): cero si los puntos son colineales.
+	const cruz = (c1x - x0) * (y1 - y0) - (c1y - y0) * (x1 - x0);
+	assert.ok(Math.abs(cruz) > 1000, `la curva es una recta (cruz=${cruz})`);
+});
+
+test('trazo con arco sigue pasando por el punto central y sus extremos', () => {
+	const a = { nombre: 'A', lat: 62, lng: 15 };
+	const b = { nombre: 'B', lat: 37.78, lng: -3.83 };
+	const c = { nombre: 'C', lat: 13, lng: -8 };
+	const n = numeros(trazo([a, b, c]));
+	const [pa, pb, pc] = [a, b, c].map((p) => proyectar(p.lat, p.lng));
+	assert.ok(Math.abs(n[0] - pa.x) < 0.1 && Math.abs(n[1] - pa.y) < 0.1);
+	assert.ok(Math.abs(n[6] - pb.x) < 0.1 && Math.abs(n[7] - pb.y) < 0.1);
+	assert.ok(Math.abs(n[n.length - 2] - pc.x) < 0.1 && Math.abs(n[n.length - 1] - pc.y) < 0.1);
+});

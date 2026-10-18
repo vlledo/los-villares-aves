@@ -1,0 +1,122 @@
+---
+import MapaMigraciones from '../components/MapaMigraciones.astro';
+import TarjetaMigracion from '../components/TarjetaMigracion.astro';
+import Layout from '../layouts/Layout.astro';
+import { obtenerMigrantes } from '../utils/migraciones';
+import { PRESENCIA_COLOR } from '../utils/meses';
+
+const migrantes = await obtenerMigrantes();
+
+const GRUPOS = [
+	{ id: 'todas', label: 'Todas' },
+	{ id: 'estival', label: 'Estivales' },
+	{ id: 'invernante', label: 'Invernantes' },
+	{ id: 'paso', label: 'De paso' },
+];
+const EPOCAS = [
+	{ id: 'primavera', label: 'Primavera' },
+	{ id: 'otono', label: 'Otoño' },
+];
+
+const BOTON =
+	'rounded-full border border-tierra-200 bg-tierra-50 px-3 py-1.5 text-sm text-tierra-700 transition-colors hover:bg-tierra-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olivo-600 aria-pressed:border-olivo-300 aria-pressed:bg-olivo-100 aria-pressed:font-semibold aria-pressed:text-olivo-800';
+---
+
+<Layout
+	title="Migraciones"
+	description="De dónde vienen y a dónde van las aves que pasan por Los Villares: rutas, kilómetros, fechas y paradas."
+>
+	<header class="border-b border-tierra-200 pb-6">
+		<h1 class="text-3xl font-bold tracking-tight text-tierra-900">Migraciones</h1>
+		<p class="mt-2 text-tierra-700">
+			Las aves del catálogo que hacen grandes viajes: de dónde vienen o a dónde van,
+			cuánto recorren y cuándo cruzan Los Villares. Los datos son orientativos.
+		</p>
+	</header>
+
+	<section class="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_19rem]" data-migraciones>
+		<div class="min-w-0">
+			<MapaMigraciones migrantes={migrantes} />
+		</div>
+
+		<aside class="space-y-5 lg:sticky lg:top-20 lg:self-start">
+			<div>
+				<h2 class="text-xs font-semibold uppercase tracking-wide text-tierra-500">Grupo</h2>
+				<div class="mt-2 flex flex-wrap gap-2">
+					{
+						GRUPOS.map((g) => (
+							<button
+								type="button"
+								data-filtro-grupo={g.id}
+								aria-pressed={g.id === 'todas' ? 'true' : 'false'}
+								class={BOTON}
+							>
+								{g.label}
+							</button>
+						))
+					}
+				</div>
+			</div>
+
+			<div>
+				<h2 class="text-xs font-semibold uppercase tracking-wide text-tierra-500">Época</h2>
+				<div class="mt-2 flex flex-wrap gap-2">
+					{
+						EPOCAS.map((e) => (
+							<button
+								type="button"
+								data-filtro-epoca={e.id}
+								aria-pressed={e.id === 'otono' ? 'true' : 'false'}
+								class={BOTON}
+							>
+								{e.label}
+							</button>
+						))
+					}
+				</div>
+				<p data-ayuda class="mt-2 min-h-[2.5rem] text-sm text-tierra-600" aria-live="polite"></p>
+			</div>
+
+			<div>
+				<h2 class="text-xs font-semibold uppercase tracking-wide text-tierra-500">Leyenda</h2>
+				<ul class="mt-2 space-y-1.5 text-sm text-tierra-700">
+					<li class="flex items-center gap-2">
+						<span class:list={['inline-block h-3 w-6 rounded-full', PRESENCIA_COLOR.estival]}></span>
+						Estival: cría aquí y pasa el invierno lejos
+					</li>
+					<li class="flex items-center gap-2">
+						<span class:list={['inline-block h-3 w-6 rounded-full', PRESENCIA_COLOR.invernante]}></span>
+						Invernante: cría lejos y pasa el invierno aquí
+					</li>
+					<li class="flex items-center gap-2">
+						<span class:list={['inline-block h-3 w-6 rounded-full', PRESENCIA_COLOR.paso]}></span>
+						De paso: solo cruza el término
+					</li>
+				</ul>
+				<p class="mt-3 text-sm text-tierra-600">
+					Pulsa «Ver en el mapa» en una tarjeta para resaltar su ruta y sus paradas.
+				</p>
+			</div>
+		</aside>
+	</section>
+
+	<section class="mt-10">
+		<p class="text-sm text-tierra-600">
+			<span data-contador>{migrantes.length}</span> especies
+		</p>
+		<div class="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			{migrantes.map((migrante) => <TarjetaMigracion migrante={migrante} />)}
+		</div>
+	</section>
+
+	<aside class="mt-10 rounded-lg border border-tierra-200 bg-tierra-50/60 p-4 text-sm text-tierra-700">
+		<p>
+			Los kilómetros, las fechas y las paradas son valores aproximados: varían entre
+			individuos y años, y para algunas especies hay poca información precisa. Los
+			datos se redactan a partir de fuentes de referencia como SEO/BirdLife, el
+			programa de marcaje con GPS y los datos de anillamiento, y se irán afinando.
+			«Sin paradas largas conocidas» significa que no se han documentado, no que
+			el ave vuele de un tirón.
+		</p>
+	</aside>
+</Layout>

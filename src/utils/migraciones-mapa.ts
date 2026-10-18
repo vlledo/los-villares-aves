@@ -35,6 +35,8 @@ export function dentroDelMarco(p: { lat: number; lng: number }): boolean {
 
 const r1 = (n: number): string => n.toFixed(1);
 
+const ARCO = 0.18;
+
 /** Curva Catmull-Rom convertida a Béziers cúbicas que pasa por todos los puntos. */
 export function trazo(puntos: Punto[]): string {
 	const p = puntos.map((q) => proyectar(q.lat, q.lng));
@@ -44,10 +46,16 @@ export function trazo(puntos: Punto[]): string {
 		const p1 = p[i];
 		const p2 = p[i + 1];
 		const p3 = p[Math.min(i + 2, p.length - 1)];
-		const c1x = p1.x + (p2.x - p0.x) / 6;
-		const c1y = p1.y + (p2.y - p0.y) / 6;
-		const c2x = p2.x - (p3.x - p1.x) / 6;
-		const c2y = p2.y - (p3.y - p1.y) / 6;
+		// Cada tramo se curva hacia el mismo lado (la normal izquierda del avance)
+		// en una fracción de su longitud, para que las rutas se lean como arcos.
+		const dx = p2.x - p1.x;
+		const dy = p2.y - p1.y;
+		const arcoX = -dy * ARCO;
+		const arcoY = dx * ARCO;
+		const c1x = p1.x + (p2.x - p0.x) / 6 + arcoX;
+		const c1y = p1.y + (p2.y - p0.y) / 6 + arcoY;
+		const c2x = p2.x - (p3.x - p1.x) / 6 + arcoX;
+		const c2y = p2.y - (p3.y - p1.y) / 6 + arcoY;
 		d += ` C ${r1(c1x)} ${r1(c1y)} ${r1(c2x)} ${r1(c2y)} ${r1(p2.x)} ${r1(p2.y)}`;
 	}
 	return d;

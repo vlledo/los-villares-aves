@@ -1,0 +1,208 @@
+---
+import { LOCATION } from '../consts';
+import type { Migrante } from '../utils/migraciones';
+import { MARCO, proyectar, trazo } from '../utils/migraciones-mapa';
+import { TIERRA_PATH } from '../utils/mapa-base.generated';
+
+interface Props {
+	migrantes: Migrante[];
+}
+
+const { migrantes } = Astro.props;
+
+const villares = proyectar(LOCATION.lat, LOCATION.lon);
+const esVillares = (p: { lat: number; lng: number }) =>
+	p.lat === LOCATION.lat && p.lng === LOCATION.lon;
+
+// Etiquetas a la izquierda del punto si este queda en el tercio oriental del mapa.
+const lado = (x: number) => (x > MARCO.ancho * 0.7 ? 'end' : 'start');
+const desplazamiento = (x: number) => (x > MARCO.ancho * 0.7 ? -14 : 14);
+---
+
+<div class="overflow-hidden rounded-xl border border-tierra-200 bg-[#e6eef2]">
+	<svg
+		data-mapa-migraciones
+		data-epoca="otono"
+		viewBox={`0 0 ${MARCO.ancho} ${MARCO.alto.toFixed(0)}`}
+		role="img"
+		aria-label="Mapa de Europa y África con las rutas migratorias de las aves que pasan por Los Villares. La lista de tarjetas inferior contiene la misma información en texto."
+		class="mx-auto block h-auto max-h-[85vh] w-full"
+	>
+		<defs>
+			<marker
+				id="flecha-migracion"
+				viewBox="0 0 10 10"
+				refX="6"
+				refY="5"
+				markerWidth="5"
+				markerHeight="5"
+				orient="auto-start-reverse"
+			>
+				<path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"></path>
+			</marker>
+		</defs>
+
+		<rect width={MARCO.ancho} height={MARCO.alto} fill="#e6eef2"></rect>
+		<path d={TIERRA_PATH} fill="#e4d5b3" fill-rule="evenodd"></path>
+
+		{
+			migrantes.map(({ ave, migracion, ruta }) => (
+				<g class="ruta" data-ruta data-slug={ave.id} data-grupo={migracion.grupo}>
+					<path class="linea" d={trazo(ruta)} fill="none"></path>
+					<g class="detalle">
+						{[migracion.zona_cria, migracion.zona_invernada]
+							.filter((p) => !esVillares(p))
+							.map((p) => {
+								const { x, y } = proyectar(p.lat, p.lng);
+								return (
+									<g>
+										<circle cx={x} cy={y} r="8" class="punto"></circle>
+										<text
+											x={x + desplazamiento(x)}
+											y={y + 6}
+											text-anchor={lado(x)}
+											class="etiqueta"
+										>
+											{p.nombre}
+										</text>
+									</g>
+								);
+							})}
+						{(migracion.escalas ?? []).map((e) => {
+							const { x, y } = proyectar(e.lat, e.lng);
+							return (
+								<g>
+									<circle cx={x} cy={y} r="7" class="escala"></circle>
+									<text
+										x={x + desplazamiento(x)}
+										y={y + 6}
+										text-anchor={lado(x)}
+										class="etiqueta"
+									>
+										{e.nombre}
+									</text>
+								</g>
+							);
+						})}
+					</g>
+				</g>
+			))
+		}
+
+		<g>
+			<circle cx={villares.x} cy={villares.y} r="18" class="aro-villares"></circle>
+			<circle cx={villares.x} cy={villares.y} r="9" class="punto-villares"></circle>
+			<text x={villares.x - 22} y={villares.y + 7} text-anchor="end" class="etiqueta-villares">
+				Los Villares
+			</text>
+		</g>
+	</svg>
+</div>
+
+<style>
+	.linea {
+		stroke-width: 2.4;
+		stroke-linecap: round;
+		stroke-dasharray: 3 9;
+		opacity: 0.6;
+		animation: fluir 1.6s linear infinite;
+		transition: opacity 0.2s;
+	}
+	[data-epoca='primavera'] .linea {
+		animation-direction: reverse;
+	}
+	@keyframes fluir {
+		to {
+			stroke-dashoffset: -24;
+		}
+	}
+
+	/* Sin animación, la dirección se indica con una flecha en el extremo de llegada. */
+	@media (prefers-reduced-motion: reduce) {
+		.linea {
+			animation: none;
+			stroke-dasharray: none;
+			opacity: 0.4;
+		}
+		[data-epoca='otono'] .linea {
+			marker-end: url(#flecha-migracion);
+		}
+		[data-epoca='primavera'] .linea {
+			marker-start: url(#flecha-migracion);
+		}
+	}
+
+	.ruta[data-grupo='estival'] .linea,
+	.ruta[data-grupo='estival'] .punto,
+	.ruta[data-grupo='estival'] .escala {
+		stroke: #d97706;
+	}
+	.ruta[data-grupo='invernante'] .linea,
+	.ruta[data-grupo='invernante'] .punto,
+	.ruta[data-grupo='invernante'] .escala {
+		stroke: #0284c7;
+	}
+	.ruta[data-grupo='paso'] .linea,
+	.ruta[data-grupo='paso'] .punto,
+	.ruta[data-grupo='paso'] .escala {
+		stroke: #6e8232;
+	}
+	.punto {
+		fill: #faf7f1;
+		stroke-width: 3;
+	}
+	.escala {
+		fill: #faf7f1;
+		stroke-width: 3;
+	}
+
+	.ruta[hidden] {
+		display: none;
+	}
+
+	/* El detalle (extremos y escalas) solo se muestra al seleccionar la ruta. */
+	.detalle {
+		display: none;
+	}
+	.ruta[data-seleccionada] .detalle {
+		display: block;
+	}
+	.ruta[data-seleccionada] .linea {
+		opacity: 1;
+		stroke-width: 4.2;
+	}
+	[data-seleccion] .ruta:not([data-seleccionada]) .linea {
+		opacity: 0.07;
+	}
+
+	.etiqueta {
+		font-size: 21px;
+		font-family: system-ui, sans-serif;
+		font-weight: 600;
+		fill: #2f2316;
+		paint-order: stroke;
+		stroke: #faf7f1;
+		stroke-width: 5px;
+		stroke-linejoin: round;
+	}
+
+	.aro-villares {
+		fill: none;
+		stroke: #404e1f;
+		stroke-width: 2;
+		opacity: 0.45;
+	}
+	.punto-villares {
+		fill: #404e1f;
+	}
+	.etiqueta-villares {
+		font-size: 23px;
+		font-family: system-ui, sans-serif;
+		font-weight: 700;
+		fill: #1c220f;
+		paint-order: stroke;
+		stroke: #faf7f1;
+		stroke-width: 5px;
+		stroke-linejoin: round;
+	}
+</style>
