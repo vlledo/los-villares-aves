@@ -53,8 +53,16 @@ const escalas = m.escalas ?? [];
 	data-tarjeta-migracion
 	data-slug={ave.id}
 	data-grupo={m.grupo}
-	class="mb-4 grid row-span-6 grid-rows-subgrid gap-y-0 overflow-hidden rounded-xl border border-tierra-200 bg-white transition-shadow data-[seleccionada]:border-olivo-400 data-[seleccionada]:shadow-md"
+	class="group relative mb-4 grid row-span-6 grid-rows-subgrid gap-y-0 overflow-hidden rounded-xl border border-tierra-200 bg-white transition-shadow data-[seleccionada]:border-olivo-600 data-[seleccionada]:bg-olivo-50 data-[seleccionada]:shadow-lg data-[seleccionada]:ring-2 data-[seleccionada]:ring-olivo-600"
 >
+	<span
+		aria-hidden="true"
+		class="absolute right-3 top-3 z-10 hidden items-center gap-1.5 rounded-full bg-olivo-700 px-2.5 py-1 text-xs font-semibold text-white shadow group-data-[seleccionada]:inline-flex"
+	>
+		<span class="inline-block h-2 w-2 rounded-full bg-white"></span>
+		En el mapa
+	</span>
+
 	{
 		ave.data.foto_principal ? (
 			<Image
