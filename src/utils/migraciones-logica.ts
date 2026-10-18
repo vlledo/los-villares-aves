@@ -95,3 +95,7 @@ export function textoRango({ desde, hasta }: RangoMeses): string {
 export function epocaPorMes(mes0: number): Epoca {
 	return mes0 < 6 ? 'primavera' : 'otono';
 }
+
+export function coincideGrupo(filtro: 'todas' | Grupo, grupo: Grupo): boolean {
+	return filtro === 'todas' || filtro === grupo;
+}

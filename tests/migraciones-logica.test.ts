@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
+	coincideGrupo,
 	epocaPorMes,
 	puntosRuta,
 	sentido,
@@ -114,4 +115,15 @@ test('epocaPorMes reparte enero-junio en primavera y julio-diciembre en otoño',
 	assert.equal(epocaPorMes(5), 'primavera');
 	assert.equal(epocaPorMes(6), 'otono');
 	assert.equal(epocaPorMes(11), 'otono');
+});
+
+test('coincideGrupo: "todas" admite cualquier grupo', () => {
+	assert.equal(coincideGrupo('todas', 'paso'), true);
+	assert.equal(coincideGrupo('todas', 'estival'), true);
+});
+
+test('coincideGrupo: un grupo concreto solo admite el suyo', () => {
+	assert.equal(coincideGrupo('estival', 'estival'), true);
+	assert.equal(coincideGrupo('estival', 'paso'), false);
+	assert.equal(coincideGrupo('invernante', 'estival'), false);
 });

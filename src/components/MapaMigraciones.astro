@@ -17,6 +17,15 @@ const esVillares = (p: { lat: number; lng: number }) =>
 // Etiquetas a la izquierda del punto si este queda en el tercio oriental del mapa.
 const lado = (x: number) => (x > MARCO.ancho * 0.7 ? 'end' : 'start');
 const desplazamiento = (x: number) => (x > MARCO.ancho * 0.7 ? -14 : 14);
+
+// Un punto de la misma fila que Los Villares y al oeste llevaría su etiqueta (que se
+// extiende hacia el este) encima del pueblo: se coloca bajo el punto, alineada a la izquierda.
+const cruzaVillares = (p: { x: number; y: number }) =>
+	Math.abs(p.y - villares.y) < 30 && p.x < villares.x && villares.x - p.x < 300;
+const etiquetaPunto = (p: { x: number; y: number }) =>
+	cruzaVillares(p)
+		? { x: p.x - 20, y: p.y + 40, anchor: 'start' }
+		: { x: p.x + desplazamiento(p.x), y: p.y + 6, anchor: lado(p.x) };
 ---
 
 <div class="overflow-hidden rounded-xl border border-tierra-200 bg-[#e6eef2]">
@@ -53,32 +62,24 @@ const desplazamiento = (x: number) => (x > MARCO.ancho * 0.7 ? -14 : 14);
 						{[migracion.zona_cria, migracion.zona_invernada]
 							.filter((p) => !esVillares(p))
 							.map((p) => {
-								const { x, y } = proyectar(p.lat, p.lng);
+								const q = proyectar(p.lat, p.lng);
+								const e = etiquetaPunto(q);
 								return (
 									<g>
-										<circle cx={x} cy={y} r="8" class="punto"></circle>
-										<text
-											x={x + desplazamiento(x)}
-											y={y + 6}
-											text-anchor={lado(x)}
-											class="etiqueta"
-										>
+										<circle cx={q.x} cy={q.y} r="8" class="punto"></circle>
+										<text x={e.x} y={e.y} text-anchor={e.anchor} class="etiqueta">
 											{p.nombre}
 										</text>
 									</g>
 								);
 							})}
 						{(migracion.escalas ?? []).map((e) => {
-							const { x, y } = proyectar(e.lat, e.lng);
+							const q = proyectar(e.lat, e.lng);
+							const et = etiquetaPunto(q);
 							return (
 								<g>
-									<circle cx={x} cy={y} r="7" class="escala"></circle>
-									<text
-										x={x + desplazamiento(x)}
-										y={y + 6}
-										text-anchor={lado(x)}
-										class="etiqueta"
-									>
+									<circle cx={q.x} cy={q.y} r="7" class="escala"></circle>
+									<text x={et.x} y={et.y} text-anchor={et.anchor} class="etiqueta">
 										{e.nombre}
 									</text>
 								</g>

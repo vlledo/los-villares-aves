@@ -35,7 +35,7 @@ const BOTON =
 	</header>
 
 	<section class="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_19rem]" data-migraciones>
-		<div class="min-w-0">
+		<div class="min-w-0 scroll-mt-20">
 			<MapaMigraciones migrantes={migrantes} />
 		</div>
 
@@ -120,3 +120,8 @@ const BOTON =
 		</p>
 	</aside>
 </Layout>
+
+<script>
+	import { initMigraciones } from '../scripts/migraciones.ts';
+	initMigraciones();
+</script>
