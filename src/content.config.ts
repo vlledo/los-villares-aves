@@ -54,6 +54,30 @@ const habitat = z.enum([
 
 const estadoUICN = z.enum(['LC', 'NT', 'VU', 'EN', 'CR', 'DD', 'EX']);
 
+const punto = z.object({
+	nombre: z.string(),
+	lat: z.number().min(-90).max(90),
+	lng: z.number().min(-180).max(180),
+});
+
+const rangoMeses = z.object({
+	desde: z.enum(meses),
+	hasta: z.enum(meses),
+});
+
+const migracion = z.object({
+	grupo: z.enum(['estival', 'invernante', 'paso']),
+	zona_cria: punto,
+	zona_invernada: punto,
+	km: z.tuple([z.number().positive(), z.number().positive()]),
+	primavera: rangoMeses,
+	otono: rangoMeses,
+	viaje: z.enum(['directo', 'con_escalas']),
+	escalas: z.array(punto.extend({ nota: z.string().optional() })).optional(),
+	nota: z.string().optional(),
+	fuente: z.string().optional(),
+});
+
 const aves = defineCollection({
 	loader: glob({ base: './src/content/aves', pattern: '**/*.{md,mdx}' }),
 	schema: ({ image }) =>
@@ -82,6 +106,8 @@ const aves = defineCollection({
 
 			estado_uicn: estadoUICN.default('LC'),
 			amenazas_locales: z.array(z.string()).optional(),
+
+			migracion: migracion.optional(),
 
 			destacada: z.boolean().default(false),
 

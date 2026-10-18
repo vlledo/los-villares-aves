@@ -31,3 +31,6 @@ pnpm-debug.log*
 
 # scripts cache (taxonomía eBird, etc.)
 scripts/.cache/
+
+# mockups del brainstorming (superpowers)
+.superpowers/

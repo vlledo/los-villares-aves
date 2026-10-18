@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "test": "node --test tests/",
     "fichas:generar": "node scripts/generate-fichas.ts",
     "cantos:generar": "node --env-file=.env scripts/generate-cantos.ts",
     "fichas:enriquecer": "node --env-file=.env scripts/enriquecer-fichas.ts",
